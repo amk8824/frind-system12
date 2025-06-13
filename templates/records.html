@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة السجلات - شركة الأصدقاء للتخليص الكمركي</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/print.css') }}" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg main-header">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="/">
+                <i class="fas fa-handshake me-2"></i>
+                شركة الأصدقاء للتخليص الكمركي
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link text-white" href="/">
+                    <i class="fas fa-home me-1"></i> الرئيسية
+                </a>
+                <button class="btn btn-outline-light btn-sm me-2" onclick="printRecords()">
+                    <i class="fas fa-print"></i> طباعة
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-12">
+                <!-- Page Header -->
+                <div class="section-card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">
+                            <i class="fas fa-file-alt me-2"></i>
+                            إدارة السجلات
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- Add New Record Form -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label">اسم التاجر *</label>
+                                <input type="text" class="form-control" id="merchantName" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">التاريخ *</label>
+                                <input type="date" class="form-control" id="recordDate" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <label class="form-label">السائق الأجنبي</label>
+                                <input type="text" class="form-control" id="foreignDriver">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">السيارة الأجنبية</label>
+                                <input type="text" class="form-control" id="foreignCar">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">السائق المحلي</label>
+                                <input type="text" class="form-control" id="localDriver">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">السيارة المحلية</label>
+                                <input type="text" class="form-control" id="localCar">
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label">نوع البضاعة</label>
+                                <input type="text" class="form-control" id="goodsType">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">الملاحظات</label>
+                                <textarea class="form-control" id="notes" rows="2"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <label class="form-label">الرسوم ($)</label>
+                                <input type="number" class="form-control" id="fees" step="0.01" value="0">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">السلفة ($)</label>
+                                <input type="number" class="form-control" id="advance" step="0.01" value="0">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">ربحي ($)</label>
+                                <input type="number" class="form-control" id="myProfit" step="0.01" value="0">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">الإضافة ($)</label>
+                                <input type="number" class="form-control" id="addition" step="0.01" value="0">
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <label class="form-label">المرتجع ($)</label>
+                                <input type="number" class="form-control" id="returned" step="0.01" value="0">
+                            </div>
+                            <div class="col-md-9 d-flex align-items-end">
+                                <button type="button" class="btn btn-success w-100" onclick="saveEntry()">
+                                    <i class="fas fa-save me-2"></i>
+                                    حفظ السجل
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Records Table -->
+                <div class="section-card">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-list me-2"></i>
+                            جميع السجلات
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>التاريخ</th>
+                                        <th>التاجر</th>
+                                        <th>السائق الأجنبي</th>
+                                        <th>السيارة الأجنبية</th>
+                                        <th>السائق المحلي</th>
+                                        <th>السيارة المحلية</th>
+                                        <th>نوع البضاعة</th>
+                                        <th>الرسوم</th>
+                                        <th>السلفة</th>
+                                        <th>ربحي</th>
+                                        <th>الإضافة</th>
+                                        <th>المرتجع</th>
+                                        <th>إجمالي الدين</th>
+                                        <th>صافي الربح</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recordsTableBody">
+                                    <!-- سيتم تحميل البيانات هنا -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Print Header (Hidden on screen) -->
+    <div class="print-header" style="display: none;">
+        <h3>شركة الأصدقاء للتخليص الكمركي</h3>
+        <h4>تقرير جميع السجلات</h4>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/sounds.js') }}"></script>
+    <script>
+        // تحميل السجلات عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            loadRecords();
+            // تعيين التاريخ الحالي
+            document.getElementById('recordDate').value = new Date().toISOString().split('T')[0];
+        });
+
+        // حفظ سجل جديد
+        async function saveEntry() {
+            const data = {
+                merchant_name: document.getElementById('merchantName').value.trim(),
+                date: document.getElementById('recordDate').value,
+                foreign_driver: document.getElementById('foreignDriver').value.trim(),
+                foreign_car: document.getElementById('foreignCar').value.trim(),
+                local_driver: document.getElementById('localDriver').value.trim(),
+                local_car: document.getElementById('localCar').value.trim(),
+                goods_type: document.getElementById('goodsType').value.trim(),
+                notes: document.getElementById('notes').value.trim(),
+                fees: parseFloat(document.getElementById('fees').value) || 0,
+                advance: parseFloat(document.getElementById('advance').value) || 0,
+                my_profit: parseFloat(document.getElementById('myProfit').value) || 0,
+                addition: parseFloat(document.getElementById('addition').value) || 0,
+                returned: parseFloat(document.getElementById('returned').value) || 0
+            };
+
+            if (!data.merchant_name || !data.date) {
+                showAlert('يرجى إدخال اسم التاجر والتاريخ', 'warning');
+                return;
+            }
+
+            try {
+                const response = await fetch('/save_record', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showAlert('تم حفظ السجل بنجاح', 'success');
+                    clearForm();
+                    loadRecords();
+                    playUISound('success');
+                } else {
+                    showAlert('خطأ في حفظ السجل: ' + result.error, 'danger');
+                    playUISound('error');
+                }
+            } catch (error) {
+                console.error('Error saving record:', error);
+                showAlert('حدث خطأ في الحفظ', 'danger');
+                playUISound('error');
+            }
+        }
+
+        // تحميل السجلات
+        async function loadRecords() {
+            try {
+                const response = await fetch('/get_records');
+                const records = await response.json();
+                
+                const tbody = document.getElementById('recordsTableBody');
+                tbody.innerHTML = '';
+                
+                records.forEach(record => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${record.date}</td>
+                        <td>${record.merchant_name}</td>
+                        <td>${record.foreign_driver || '-'}</td>
+                        <td>${record.foreign_car || '-'}</td>
+                        <td>${record.local_driver || '-'}</td>
+                        <td>${record.local_car || '-'}</td>
+                        <td>${record.goods_type || '-'}</td>
+                        <td>$${record.fees.toFixed(2)}</td>
+                        <td>$${record.advance.toFixed(2)}</td>
+                        <td>$${record.my_profit.toFixed(2)}</td>
+                        <td>$${record.addition.toFixed(2)}</td>
+                        <td>$${record.returned.toFixed(2)}</td>
+                        <td class="text-danger">$${record.total_debt.toFixed(2)}</td>
+                        <td class="text-success">$${record.net_profit.toFixed(2)}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error loading records:', error);
+                showAlert('حدث خطأ في تحميل السجلات', 'danger');
+            }
+        }
+
+        // مسح النموذج
+        function clearForm() {
+            document.getElementById('merchantName').value = '';
+            document.getElementById('foreignDriver').value = '';
+            document.getElementById('foreignCar').value = '';
+            document.getElementById('localDriver').value = '';
+            document.getElementById('localCar').value = '';
+            document.getElementById('goodsType').value = '';
+            document.getElementById('notes').value = '';
+            document.getElementById('fees').value = '0';
+            document.getElementById('advance').value = '0';
+            document.getElementById('myProfit').value = '0';
+            document.getElementById('addition').value = '0';
+            document.getElementById('returned').value = '0';
+        }
+
+        // طباعة السجلات
+        function printRecords() {
+            document.body.setAttribute('data-print-date', new Date().toLocaleDateString('ar-SA'));
+            document.body.className = 'print-records';
+            setTimeout(() => {
+                window.print();
+                document.body.className = '';
+            }, 100);
+            playUISound('print');
+        }
+
+        // عرض التنبيهات
+        function showAlert(message, type = 'info') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.parentNode.removeChild(alertDiv);
+                }
+            }, 5000);
+        }
+
+        // تشغيل الأصوات
+        function playUISound(type) {
+            // استخدام نظام الأصوات الموجود
+            if (typeof playUISound !== 'undefined') {
+                playUISound(type);
+            }
+        }
+    </script>
+</body>
+</html>

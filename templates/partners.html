@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الشراكة - شركة الأصدقاء للتخليص الكمركي</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/print.css') }}" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg main-header">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="/">
+                <i class="fas fa-handshake me-2"></i>
+                شركة الأصدقاء للتخليص الكمركي
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link text-white" href="/">
+                    <i class="fas fa-home me-1"></i> الرئيسية
+                </a>
+                <button class="btn btn-outline-light btn-sm me-2" onclick="printPartnersReport()">
+                    <i class="fas fa-print"></i> طباعة
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <!-- Quick Stats Row -->
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <div class="alert alert-primary text-center">
+                    <h5 id="totalPartners">0</h5>
+                    <small>إجمالي الشركاء</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="alert alert-info text-center">
+                    <h5 id="totalPartnersBalance">$0.00</h5>
+                    <small>رصيد الشركاء</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="alert alert-success text-center">
+                    <h5 id="availableProfits">$0.00</h5>
+                    <small>الأرباح المتاحة</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="alert alert-warning text-center">
+                    <h5 id="distributedProfits">$0.00</h5>
+                    <small>الأرباح الموزعة</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Partners Management Section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="section-card">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">
+                            <i class="fas fa-handshake me-2"></i>
+                            إدارة الشراكة
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- Add Transaction Form -->
+                        <div class="row mb-4">
+                            <div class="col-md-2">
+                                <label class="form-label">الشريك *</label>
+                                <select class="form-control" id="selectedPartnerId" required>
+                                    <option value="">اختر شريك</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">نوع المعاملة *</label>
+                                <select class="form-control" id="partnerTransactionType" required>
+                                    <option value="">اختر النوع</option>
+                                    <option value="share">حصة أرباح</option>
+                                    <option value="withdraw">سحب</option>
+                                    <option value="add">إضافة رصيد</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">المبلغ ($) *</label>
+                                <input type="number" class="form-control" id="partnerTransactionAmount" step="0.01" required>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">التاريخ *</label>
+                                <input type="date" class="form-control" id="partnerTransactionDate" required>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">الوصف</label>
+                                <input type="text" class="form-control" id="partnerTransactionDescription">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">ملاحظات</label>
+                                <input type="text" class="form-control" id="partnerTransactionNotes">
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="button" class="btn btn-success w-100" onclick="addPartnerTransaction()">
+                                    <i class="fas fa-save me-2"></i>
+                                    حفظ
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Quick Action Buttons -->
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <button class="btn btn-warning w-100" onclick="distributeAutoProfit()">
+                                    <i class="fas fa-calculator me-2"></i>
+                                    توزيع أرباح تلقائي
+                                </button>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-info w-100" onclick="openManualDistributionModal()">
+                                    <i class="fas fa-edit me-2"></i>
+                                    توزيع يدوي
+                                </button>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-secondary w-100" onclick="updateProfitStats()">
+                                    <i class="fas fa-refresh me-2"></i>
+                                    تحديث الإحصائيات
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Partners Table -->
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>اسم الشريك</th>
+                                        <th>نسبة الأرباح</th>
+                                        <th>الرصيد الحالي</th>
+                                        <th>إجمالي الحصص</th>
+                                        <th>إجمالي السحوبات</th>
+                                        <th>آخر معاملة</th>
+                                        <th class="no-print">الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="partnersTableBody">
+                                    <!-- سيتم تحميل بيانات الشركاء هنا -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+    <!-- Manual Distribution Modal -->
+    <div class="modal fade" id="manualDistributionModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title">
+                        <i class="fas fa-edit me-2"></i>
+                        توزيع الأرباح اليدوي
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        يمكنك تعديل المبالغ المقترحة أو إدخال مبالغ مخصصة لكل شريك
+                    </div>
+                    <div id="manualDistributionForm">
+                        <!-- سيتم إنشاء النموذج ديناميكياً -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-warning" onclick="distributeManualProfit()">
+                        <i class="fas fa-hand-holding-dollar me-2"></i>
+                        توزيع الأرباح
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Partner Statement Modal -->
+    <div class="modal fade" id="partnerStatementModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-file-invoice me-2"></i>
+                        كشف حساب الشريك
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="partnerStatementContent">
+                        <!-- سيتم تحميل محتوى كشف الحساب هنا -->
+                    </div>
+                </div>
+                <div class="modal-footer no-print">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                    <button type="button" class="btn btn-primary" onclick="printPartnerStatement()">
+                        <i class="fas fa-print"></i> طباعة
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Print Header (Hidden on screen) -->
+    <div class="print-header" style="display: none;">
+        <h3>شركة الأصدقاء للتخليص الكمركي</h3>
+        <h4>تقرير إدارة الشراكة</h4>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/sounds.js') }}"></script>
+    <script>
+        // تحميل البيانات عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPartnersData();
+            updateProfitStats();
+            loadRecentTransactions();
+            
+            // تعيين التاريخ الحالي
+            document.getElementById('transactionDate').value = new Date().toISOString().split('T')[0];
+        });
+
+        // تحميل بيانات الشركاء
+        async function loadPartnersData() {
+            try {
+                const response = await fetch('/get_partners');
+                const data = await response.json();
+                
+                const tbody = document.getElementById('partnersTableBody');
+                const partnerSelect = document.getElementById('partnerId');
+                
+                tbody.innerHTML = '';
+                partnerSelect.innerHTML = '<option value="">اختر شريك</option>';
+                
+                data.partners.forEach(partner => {
+                    // إضافة الشريك للجدول
+                    const row = document.createElement('tr');
+                    const balanceClass = partner.current_balance >= 0 ? 'text-success' : 'text-danger';
+                    
+                    row.innerHTML = `
+                        <td><strong>${partner.name}</strong></td>
+                        <td>${partner.profit_percentage}%</td>
+                        <td class="${balanceClass}">$${partner.current_balance.toFixed(2)}</td>
+                        <td class="text-success">$${partner.total_shares.toFixed(2)}</td>
+                        <td class="text-warning">$${partner.total_withdrawals.toFixed(2)}</td>
+                        <td>${partner.last_transaction || '-'}</td>
+                        <td class="no-print">
+                            <button class="btn btn-sm btn-primary me-1" onclick="showPartnerStatement('${partner.name}', ${partner.id})">
+                                <i class="fas fa-file-invoice"></i> كشف حساب
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                    
+                    // إضافة الشريك لقائمة الاختيار
+                    const option = document.createElement('option');
+                    option.value = partner.id;
+                    option.textContent = partner.name;
+                    partnerSelect.appendChild(option);
+                });
+                
+                // تحديث الإحصائيات
+                document.getElementById('totalPartners').textContent = data.partners.length;
+                
+            } catch (error) {
+                console.error('Error loading partners data:', error);
+                showAlert('حدث خطأ في تحميل بيانات الشركاء', 'danger');
+            }
+        }
+
+        // تحديث إحصائيات الأرباح
+        async function updateProfitStats() {
+            try {
+                const response = await fetch('/get_partners');
+                const data = await response.json();
+                
+                let totalBalance = 0;
+                data.partners.forEach(partner => {
+                    totalBalance += partner.current_balance;
+                });
+                
+                document.getElementById('totalPartnersBalance').textContent = `$${totalBalance.toFixed(2)}`;
+                document.getElementById('availableProfits').textContent = `$${data.available_profits.toFixed(2)}`;
+                document.getElementById('distributedProfits').textContent = `$${data.distributed_profits.toFixed(2)}`;
+                
+            } catch (error) {
+                console.error('Error updating profit stats:', error);
+            }
+        }
+
+        // تحميل المعاملات الحديثة
+        async function loadRecentTransactions() {
+            try {
+                const response = await fetch('/get_partners');
+                const data = await response.json();
+                
+                const tbody = document.getElementById('recentTransactionsBody');
+                tbody.innerHTML = '';
+                
+                // عرض آخر 10 معاملات
+                const recentTransactions = data.recent_transactions || [];
+                recentTransactions.slice(0, 10).forEach(transaction => {
+                    const row = document.createElement('tr');
+                    const typeText = {
+                        'share': 'حصة أرباح',
+                        'withdraw': 'سحب',
+                        'add': 'إضافة رصيد'
+                    };
+                    
+                    row.innerHTML = `
+                        <td>${transaction.date}</td>
+                        <td>${transaction.partner_name}</td>
+                        <td>
+                            <span class="badge bg-${transaction.transaction_type === 'share' ? 'success' : 
+                                                    transaction.transaction_type === 'withdraw' ? 'warning' : 'info'}">
+                                ${typeText[transaction.transaction_type]}
+                            </span>
+                        </td>
+                        <td>$${transaction.amount.toFixed(2)}</td>
+                        <td>${transaction.description || '-'}</td>
+                        <td class="no-print">
+                            <button class="btn btn-sm btn-danger" onclick="deletePartnerTransaction(${transaction.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+                
+            } catch (error) {
+                console.error('Error loading recent transactions:', error);
+            }
+        }
+
+        // فتح نافذة إضافة معاملة
+        function openAddTransactionModal() {
+            new bootstrap.Modal(document.getElementById('addTransactionModal')).show();
+            playUISound('modal');
+        }
+
+        // إضافة معاملة شريك
+        async function addPartnerTransaction() {
+            const data = {
+                partner_id: parseInt(document.getElementById('partnerId').value),
+                transaction_type: document.getElementById('transactionType').value,
+                amount: parseFloat(document.getElementById('transactionAmount').value),
+                date: document.getElementById('transactionDate').value,
+                description: document.getElementById('transactionDescription').value.trim(),
+                notes: document.getElementById('transactionNotes').value.trim()
+            };
+
+            if (!data.partner_id || !data.transaction_type || !data.amount || !data.date) {
+                showAlert('يرجى ملء جميع الحقول المطلوبة', 'warning');
+                return;
+            }
+
+            try {
+                const response = await fetch('/add_partner_transaction', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showAlert('تم إضافة المعاملة بنجاح', 'success');
+                    bootstrap.Modal.getInstance(document.getElementById('addTransactionModal')).hide();
+                    clearTransactionForm();
+                    loadPartnersData();
+                    updateProfitStats();
+                    loadRecentTransactions();
+                    playUISound('success');
+                } else {
+                    showAlert('خطأ في إضافة المعاملة: ' + result.error, 'danger');
+                    playUISound('error');
+                }
+            } catch (error) {
+                console.error('Error adding transaction:', error);
+                showAlert('حدث خطأ في إضافة المعاملة', 'danger');
+                playUISound('error');
+            }
+        }
+
+        // مسح نموذج المعاملة
+        function clearTransactionForm() {
+            document.getElementById('partnerId').value = '';
+            document.getElementById('transactionType').value = '';
+            document.getElementById('transactionAmount').value = '';
+            document.getElementById('transactionDescription').value = '';
+            document.getElementById('transactionNotes').value = '';
+        }
+
+        // توزيع الأرباح التلقائي
+        async function distributeAutoProfit() {
+            if (!confirm('هل أنت متأكد من توزيع الأرباح تلقائياً على جميع الشركاء؟')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/distribute_profits', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showAlert(`تم توزيع ${result.distributed_amount.toFixed(2)}$ على ${result.partners_count} شريك`, 'success');
+                    loadPartnersData();
+                    updateProfitStats();
+                    loadRecentTransactions();
+                    playUISound('success');
+                } else {
+                    showAlert('خطأ في توزيع الأرباح: ' + result.error, 'danger');
+                    playUISound('error');
+                }
+            } catch (error) {
+                console.error('Error distributing profits:', error);
+                showAlert('حدث خطأ في توزيع الأرباح', 'danger');
+                playUISound('error');
+            }
+        }
+
+        // حذف معاملة شريك
+        async function deletePartnerTransaction(transactionId) {
+            if (!confirm('هل أنت متأكد من حذف هذه المعاملة؟')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/delete_partner_transaction/${transactionId}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showAlert('تم حذف المعاملة بنجاح', 'success');
+                    loadPartnersData();
+                    updateProfitStats();
+                    loadRecentTransactions();
+                    playUISound('success');
+                } else {
+                    showAlert('خطأ في حذف المعاملة: ' + result.error, 'danger');
+                    playUISound('error');
+                }
+            } catch (error) {
+                console.error('Error deleting transaction:', error);
+                showAlert('حدث خطأ في حذف المعاملة', 'danger');
+                playUISound('error');
+            }
+        }
+
+        // عرض كشف حساب شريك
+        async function showPartnerStatement(partnerName, partnerId) {
+            try {
+                const response = await fetch(`/get_partner_statement/${partnerId}`);
+                const data = await response.json();
+                
+                const content = document.getElementById('partnerStatementContent');
+                content.innerHTML = `
+                    <div class="partner-header mb-3">
+                        <h4>كشف حساب الشريك: ${partnerName}</h4>
+                        <p class="mb-0">نسبة الأرباح: ${data.partner.profit_percentage}%</p>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <div class="balance-card">
+                                <h6>الرصيد الحالي</h6>
+                                <p class="balance-amount ${data.partner.current_balance >= 0 ? 'text-success' : 'text-danger'}">
+                                    $${data.partner.current_balance.toFixed(2)}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="balance-card">
+                                <h6>إجمالي الحصص</h6>
+                                <p class="balance-amount text-success">$${data.partner.total_shares.toFixed(2)}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="balance-card">
+                                <h6>إجمالي السحوبات</h6>
+                                <p class="balance-amount text-warning">$${data.partner.total_withdrawals.toFixed(2)}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h5><i class="fas fa-history"></i> تاريخ المعاملات</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>التاريخ</th>
+                                    <th>نوع المعاملة</th>
+                                    <th>المبلغ</th>
+                                    <th>الوصف</th>
+                                    <th>ملاحظات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.transactions.map(transaction => `
+                                    <tr>
+                                        <td>${transaction.date}</td>
+                                        <td>
+                                            <span class="badge bg-${transaction.transaction_type === 'share' ? 'success' : 
+                                                                    transaction.transaction_type === 'withdraw' ? 'warning' : 'info'}">
+                                                ${transaction.transaction_type === 'share' ? 'حصة أرباح' :
+                                                  transaction.transaction_type === 'withdraw' ? 'سحب' : 'إضافة رصيد'}
+                                            </span>
+                                        </td>
+                                        <td>$${transaction.amount.toFixed(2)}</td>
+                                        <td>${transaction.description || '-'}</td>
+                                        <td>${transaction.notes || '-'}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                
+                new bootstrap.Modal(document.getElementById('partnerStatementModal')).show();
+                playUISound('modal');
+                
+            } catch (error) {
+                console.error('Error loading partner statement:', error);
+                showAlert('حدث خطأ في تحميل كشف الحساب', 'danger');
+            }
+        }
+
+        // طباعة تقرير الشراكة
+        function printPartnersReport() {
+            document.body.setAttribute('data-print-date', new Date().toLocaleDateString('ar-SA'));
+            document.body.className = 'print-partners';
+            setTimeout(() => {
+                window.print();
+                document.body.className = '';
+            }, 100);
+            playUISound('print');
+        }
+
+        // طباعة كشف حساب شريك
+        function printPartnerStatement() {
+            document.body.setAttribute('data-print-date', new Date().toLocaleDateString('ar-SA'));
+            document.body.className = 'print-partner-statement';
+            setTimeout(() => {
+                window.print();
+                document.body.className = '';
+            }, 100);
+            playUISound('print');
+        }
+
+        // عرض التنبيهات
+        function showAlert(message, type = 'info') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.parentNode.removeChild(alertDiv);
+                }
+            }, 5000);
+        }
+
+        // تشغيل الأصوات
+        function playUISound(type) {
+            // استخدام نظام الأصوات الموجود
+            if (typeof playUISound !== 'undefined') {
+                playUISound(type);
+            }
+        }
+    </script>
+</body>
+</html>

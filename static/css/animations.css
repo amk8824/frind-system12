@@ -1,0 +1,480 @@
+/* ملف المؤثرات البصرية والتحريك */
+
+/* تأثيرات الانتقال العامة */
+* {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* تأثيرات الهيدر */
+.main-header {
+    animation: slideInFromTop 1s ease-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.main-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes slideInFromTop {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        left: -100%;
+    }
+    50% {
+        left: 100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+/* تأثيرات الشعار */
+.company-logo {
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    animation: logoFloat 3s ease-in-out infinite;
+}
+
+.company-logo:hover {
+    transform: scale(1.2) rotate(5deg);
+    filter: drop-shadow(0 8px 16px rgba(255, 215, 0, 0.4));
+}
+
+@keyframes logoFloat {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+/* تأثيرات الأزرار */
+.btn {
+    position: relative;
+    overflow: hidden;
+    transform: perspective(1000px) translateZ(0);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 33, 71, 0.3);
+}
+
+.btn:active {
+    transform: translateY(1px) scale(0.98);
+}
+
+/* تأثير النبض للأزرار المهمة */
+.btn-primary {
+    animation: pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow {
+    0%, 100% {
+        box-shadow: 0 4px 15px rgba(0, 33, 71, 0.2);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(0, 33, 71, 0.4);
+    }
+}
+
+/* تأثيرات البطاقات */
+.stats-card, .summary-card {
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.stats-card:hover, .summary-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 35px rgba(0, 33, 71, 0.2);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* تأثيرات النوافذ المنبثقة */
+.modal.fade .modal-dialog {
+    transform: perspective(1000px) rotateX(-30deg) translateY(-50px);
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.modal.show .modal-dialog {
+    transform: perspective(1000px) rotateX(0deg) translateY(0);
+}
+
+.modal-content {
+    animation: modalSlideIn 0.5s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.7) translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* تأثيرات الهيدر في النوافذ */
+.modal-header {
+    position: relative;
+    overflow: hidden;
+}
+
+.modal-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700);
+    animation: headerGlow 2s linear infinite;
+}
+
+@keyframes headerGlow {
+    0%, 100% {
+        transform: translateX(-100%);
+    }
+    50% {
+        transform: translateX(100%);
+    }
+}
+
+/* تأثيرات الجداول */
+.table {
+    animation: tableSlideIn 0.7s ease-out;
+}
+
+.table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.table tbody tr:hover {
+    transform: scale(1.01);
+    background: linear-gradient(90deg, rgba(0, 33, 71, 0.05), rgba(255, 215, 0, 0.05), rgba(0, 33, 71, 0.05)) !important;
+}
+
+@keyframes tableSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* تأثيرات النماذج */
+.form-control, .form-select {
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.form-control:focus, .form-select:focus {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 3px rgba(0, 33, 71, 0.1), 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+/* تأثيرات التحميل */
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 215, 0, 0.3);
+    border-radius: 50%;
+    border-top-color: #ffd700;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* تأثيرات الإشعارات */
+.alert {
+    animation: alertSlideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes alertSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(300px) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+/* تأثيرات الخلفية المتحركة */
+.main-content {
+    position: relative;
+    overflow: hidden;
+}
+
+.main-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(255, 215, 0, 0.02) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(0, 33, 71, 0.02) 0%, transparent 50%);
+    pointer-events: none;
+    animation: backgroundShift 10s ease-in-out infinite;
+}
+
+@keyframes backgroundShift {
+    0%, 100% {
+        transform: translateX(0) translateY(0);
+    }
+    25% {
+        transform: translateX(20px) translateY(-10px);
+    }
+    50% {
+        transform: translateX(-10px) translateY(20px);
+    }
+    75% {
+        transform: translateX(-20px) translateY(-20px);
+    }
+}
+
+/* تأثيرات الظل المتحرك */
+.financial-input {
+    position: relative;
+}
+
+.financial-input:focus {
+    animation: inputGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes inputGlow {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+    }
+}
+
+/* تأثيرات التمرير السحري */
+.smooth-scroll {
+    scroll-behavior: smooth;
+}
+
+/* تأثيرات الأرقام المالية */
+.amount {
+    transition: all 0.3s ease;
+}
+
+.amount:hover {
+    transform: scale(1.1);
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+/* تأثيرات الانتقال بين الصفحات */
+.page-transition {
+    animation: pageSlideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes pageSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* تأثيرات الماوس */
+.interactive-element {
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.interactive-element:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.1);
+}
+
+/* تأثيرات النجوم المتلألئة */
+.star-effect {
+    position: relative;
+    overflow: hidden;
+}
+
+.star-effect::after {
+    content: '✨';
+    position: absolute;
+    top: 10%;
+    right: 10%;
+    font-size: 12px;
+    opacity: 0;
+    animation: starTwinkle 3s infinite;
+}
+
+@keyframes starTwinkle {
+    0%, 100% {
+        opacity: 0;
+        transform: scale(0.5) rotate(0deg);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1) rotate(180deg);
+    }
+}
+
+/* تأثيرات التدرج المتحرك */
+.gradient-text {
+    background: linear-gradient(45deg, #002147, #ffd700, #002147);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* تأثيرات الانتقال المرن */
+.elastic-transition {
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* تأثيرات البحث والتصفية */
+.search-highlight {
+    animation: highlightPulse 1s ease-in-out;
+}
+
+@keyframes highlightPulse {
+    0%, 100% {
+        background-color: transparent;
+    }
+    50% {
+        background-color: rgba(255, 215, 0, 0.3);
+    }
+}
+
+/* تأثيرات الجسيمات */
+.particle-effect {
+    position: relative;
+}
+
+.particle-effect::before {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: #ffd700;
+    border-radius: 50%;
+    animation: particleFloat 4s linear infinite;
+}
+
+@keyframes particleFloat {
+    from {
+        transform: translateY(100px) translateX(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    to {
+        transform: translateY(-100px) translateX(50px);
+        opacity: 0;
+    }
+}
+
+/* تأثيرات الموجة */
+.wave-effect {
+    position: relative;
+    overflow: hidden;
+}
+
+.wave-effect::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 200%;
+    height: 20px;
+    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+    animation: wave 3s linear infinite;
+}
+
+@keyframes wave {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(50%);
+    }
+}
+
+/* تحسين الأداء */
+.gpu-accelerated {
+    transform: translateZ(0);
+    will-change: transform, opacity;
+}

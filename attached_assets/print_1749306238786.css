@@ -1,0 +1,319 @@
+/* ملف CSS مخصص للطباعة */
+@media print {
+    /* إعدادات عامة للطباعة - ورقة بيضاء بدون ألوان */
+    * {
+        -webkit-print-color-adjust: none !important;
+        color-adjust: none !important;
+        background: white !important;
+        background-color: white !important;
+        background-image: none !important;
+        box-shadow: none !important;
+    }
+
+    body {
+        font-family: 'Cairo', Arial, sans-serif !important;
+        font-size: 12pt !important;
+        line-height: 1.3 !important;
+        color: black !important;
+        background: white !important;
+        margin: 0 !important;
+        padding: 10px !important;
+    }
+
+    /* إخفاء العناصر غير المطلوبة في الطباعة */
+    .main-header,
+    .action-buttons,
+    .form-card,
+    .stats-dashboard,
+    .modal-header,
+    .modal-footer,
+    .btn,
+    .no-print,
+    .payment-form-section,
+    .withdrawal-form-section,
+    .main-footer {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    /* إظهار النوافذ المنبثقة للطباعة */
+    .modal {
+        display: block !important;
+        position: static !important;
+        background: none !important;
+        overflow: visible !important;
+        z-index: auto !important;
+        page-break-inside: avoid;
+    }
+
+    .modal-dialog {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    .modal-content {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        background: white !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    .modal-body {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* إظهار عناصر الطباعة */
+    .print-header {
+        display: block !important;
+        text-align: center !important;
+        margin-bottom: 20px !important;
+        border-bottom: 2px solid black !important;
+        padding-bottom: 10px !important;
+    }
+
+    .print-header h3 {
+        font-size: 18pt !important;
+        font-weight: bold !important;
+        margin: 0 0 5px 0 !important;
+        color: black !important;
+    }
+
+    .print-header h4 {
+        font-size: 14pt !important;
+        font-weight: normal !important;
+        margin: 0 !important;
+        color: #666 !important;
+    }
+
+    .print-date {
+        display: block !important;
+        text-align: left !important;
+        font-size: 10pt !important;
+        color: #666 !important;
+        margin-bottom: 15px !important;
+    }
+
+    /* تنسيق العناوين */
+    h5, h6 {
+        font-size: 14pt !important;
+        font-weight: bold !important;
+        color: black !important;
+        margin: 15px 0 10px 0 !important;
+        page-break-after: avoid;
+        text-align: center !important;
+    }
+
+    /* تنسيق الجداول */
+    .table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin: 10px 0 !important;
+        page-break-inside: avoid;
+    }
+
+    .table th, .table td {
+        border: 1px solid black !important;
+        padding: 4px 6px !important;
+        font-size: 10pt !important;
+        text-align: center !important;
+        vertical-align: middle !important;
+        word-wrap: break-word !important;
+    }
+
+    .table th {
+        background-color: #f0f0f0 !important;
+        font-weight: bold !important;
+        color: black !important;
+    }
+
+    /* تنسيق المربعات المميزة */
+    .balance-card {
+        background-color: #f0f8ff !important;
+        border: 2px solid black !important;
+        color: black !important;
+        padding: 10px !important;
+        border-radius: 5px !important;
+        text-align: center !important;
+        font-weight: bold !important;
+        margin: 10px 0 !important;
+    }
+
+    .summary-card {
+        background-color: #f9f9f9 !important;
+        border: 1px solid black !important;
+        color: black !important;
+        padding: 10px !important;
+        border-radius: 5px !important;
+        margin: 10px 0 !important;
+    }
+
+    /* تنسيق التنبيهات */
+    .alert {
+        border: 1px solid black !important;
+        border-radius: 5px !important;
+        padding: 8px !important;
+        margin: 5px 0 !important;
+        text-align: center !important;
+        font-weight: bold !important;
+    }
+
+    .alert-success {
+        background-color: #f0fff0 !important;
+        color: black !important;
+    }
+
+    .alert-warning {
+        background-color: #fff8dc !important;
+        color: black !important;
+    }
+
+    .alert-info {
+        background-color: #f0f8ff !important;
+        color: black !important;
+    }
+
+    /* إعدادات الصفحة */
+    @page {
+        size: A4;
+        margin: 15mm;
+        margin-top: 20mm;
+        margin-bottom: 20mm;
+    }
+
+    /* منع تقسيم العناصر */
+    .row, .col-md-4, .col-md-6, .col-md-12 {
+        page-break-inside: avoid;
+        margin-bottom: 10px !important;
+    }
+
+    /* تحسين التخطيط للطباعة */
+    .table-responsive {
+        overflow: visible !important;
+        max-height: none !important;
+        border: none !important;
+    }
+
+    /* تنسيق أعمدة التفاصيل */
+    .col-md-4, .col-md-6 {
+        width: 48% !important;
+        display: inline-block !important;
+        vertical-align: top !important;
+        margin: 1% !important;
+    }
+
+    .col-md-12 {
+        width: 100% !important;
+        display: block !important;
+    }
+
+    /* تنسيق خاص للعناوين المالية */
+    .merchant-header {
+        background-color: #f5f5f5 !important;
+        border: 2px solid black !important;
+        padding: 15px !important;
+        margin-bottom: 20px !important;
+        text-align: center !important;
+    }
+
+    .merchant-header h4 {
+        font-size: 16pt !important;
+        font-weight: bold !important;
+        margin: 0 !important;
+        color: black !important;
+    }
+
+    .balance-amount {
+        font-size: 14pt !important;
+        font-weight: bold !important;
+    }
+
+    /* إخفاء النوافذ الأخرى عند الطباعة */
+    body.print-records .modal:not(#recordsModal) {
+        display: none !important;
+    }
+
+    body.print-merchants .modal:not(#merchantsModal) {
+        display: none !important;
+    }
+
+    body.print-statement .modal:not(#merchantStatementModal) {
+        display: none !important;
+    }
+
+    body.print-withdrawals .modal:not(#withdrawModal) {
+        display: none !important;
+    }
+
+    /* طباعة تقارير الشركاء */
+    body.print-partners .modal:not(#partnersModal) {
+        display: none !important;
+    }
+
+    body.print-partner-statement .modal:not(#partnerStatementModal) {
+        display: none !important;
+    }
+
+    /* تنسيق خاص لتقارير الشركاء */
+    .partner-header {
+        background-color: #f5f5f5 !important;
+        border: 2px solid black !important;
+        padding: 15px !important;
+        margin-bottom: 20px !important;
+        text-align: center !important;
+        page-break-inside: avoid;
+    }
+
+    .balance-card {
+        background-color: #f0f8ff !important;
+        border: 1px solid black !important;
+        padding: 8px !important;
+        margin: 5px 0 !important;
+        text-align: center !important;
+        font-size: 10pt !important;
+    }
+
+    .balance-label {
+        font-weight: bold !important;
+        color: black !important;
+        display: block !important;
+        margin-bottom: 5px !important;
+    }
+
+    .balance-amount {
+        font-size: 12pt !important;
+        font-weight: bold !important;
+        color: black !important;
+    }
+
+    /* إخفاء عناصر غير ضرورية في طباعة الشركاء */
+    .partner-transaction-section {
+        display: none !important;
+    }
+
+    /* تنسيق خاص للمعاملات */
+    .text-success, .text-danger, .text-info, .text-warning {
+        color: black !important;
+    }
+
+    /* تحسين عرض النسب والأرقام */
+    .summary-card {
+        border: 1px solid black !important;
+        padding: 10px !important;
+        margin: 5px 0 !important;
+        background-color: #f9f9f9 !important;
+    }
+
+    .summary-card h6 {
+        color: black !important;
+        font-weight: bold !important;
+        border-bottom: 1px solid black !important;
+        padding-bottom: 5px !important;
+        margin-bottom: 10px !important;
+    }
+}

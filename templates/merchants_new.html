@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>إدارة التجار - شركة الأصدقاء للتخليص الكمركي</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/print.css') }}" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="/">
+                <i class="fas fa-handshake me-2"></i>
+                شركة الأصدقاء للتخليص الكمركي
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link text-white" href="/">
+                    <i class="fas fa-home me-1"></i> الرئيسية
+                </a>
+                <button class="btn btn-outline-light btn-sm me-2" onclick="printMerchants()">
+                    <i class="fas fa-print"></i> طباعة
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-12">
+                <!-- Page Header -->
+                <div class="section-card mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h4 class="mb-0">
+                            <i class="fas fa-users me-2"></i>
+                            إدارة ديون التجار
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        
+
+
+                        <!-- Merchants Debts Table -->
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>اسم التاجر</th>
+                                        <th>المعاملات</th>
+                                        <th>الأجور</th>
+                                        <th>السلف</th>
+                                        <th>إجمالي الدين</th>
+                                        <th>المدفوعات</th>
+                                        <th>الرصيد الحالي</th>
+                                        <th>آخر معاملة</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="merchantsTableBody">
+                                    <!-- سيتم تحميل البيانات ديناميكياً -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Merchant Statement -->
+    <div class="modal fade" id="merchantStatementModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-file-invoice me-2"></i>
+                        كشف حساب التاجر
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="merchantStatementContent">
+                    <!-- سيتم تحميل المحتوى ديناميكياً -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                    <button type="button" class="btn btn-primary" onclick="printMerchantStatement()">
+                        <i class="fas fa-print"></i> طباعة
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Merchant Adjustments (إضافة/إرجاع) -->
+    <div class="modal fade" id="merchantAdjustmentModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title">
+                        <i class="fas fa-edit me-2"></i>
+                        إضافة أو إرجاع للتاجر
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="adjustmentForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">اسم التاجر</label>
+                                <input type="text" class="form-control" id="adjustmentMerchantName" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">نوع التعديل *</label>
+                                <select class="form-select" id="adjustmentType" required>
+                                    <option value="">اختر نوع التعديل...</option>
+                                    <option value="addition">إضافة (تقليل الدين)</option>
+                                    <option value="return">إرجاع (زيادة الدين)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <label class="form-label">المبلغ *</label>
+                                <input type="number" class="form-control" id="adjustmentAmount" 
+                                       step="0.01" min="0.01" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">التاريخ</label>
+                                <input type="date" class="form-control" id="adjustmentDate">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label class="form-label">الوصف</label>
+                                <input type="text" class="form-control" id="adjustmentDescription" 
+                                       placeholder="وصف التعديل (اختياري)">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label class="form-label">ملاحظات</label>
+                                <textarea class="form-control" id="adjustmentNotes" rows="3" 
+                                          placeholder="ملاحظات إضافية (اختياري)"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-warning" onclick="saveAdjustment()">
+                        <i class="fas fa-save"></i> حفظ التعديل
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Viewing Merchant Adjustments -->
+    <div class="modal fade" id="viewAdjustmentsModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-list me-2"></i>
+                        سجل الإضافات والإرجاعات
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="adjustmentsViewContent">
+                    <!-- سيتم تحميل المحتوى ديناميكياً -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // تحميل ديون التجار
+        async function loadMerchantsDebts() {
+            try {
+                const response = await fetch('/get_merchants_debts');
+                const merchants = await response.json();
+                
+                const tbody = document.getElementById('merchantsTableBody');
+                tbody.innerHTML = '';
+                
+                if (merchants.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="8" class="text-center">لا توجد بيانات تجار</td></tr>';
+                    return;
+                }
+                
+                merchants.forEach(merchant => {
+                    const balanceClass = (merchant.current_balance || 0) > 0 ? 'text-danger' : 'text-success';
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><strong>${merchant.name}</strong></td>
+                        <td>${merchant.transaction_count}</td>
+                        <td>$${(merchant.total_wages || merchant.total_fees || 0).toFixed(2)}</td>
+                        <td>$${merchant.total_advance.toFixed(2)}</td>
+                        <td class="text-danger">$${merchant.total_debt.toFixed(2)}</td>
+                        <td class="text-success">$${merchant.total_payments.toFixed(2)}</td>
+                        <td class="${balanceClass}">
+                            <strong>$${merchant.current_balance.toFixed(2)}</strong>
+                        </td>
+                        <td>${merchant.last_transaction || '-'}</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <button class="btn btn-sm btn-primary" onclick="showMerchantStatement('${merchant.name}')" title="كشف الحساب">
+                                    <i class="fas fa-file-invoice"></i>
+                                </button>
+                                <button class="btn btn-sm btn-warning" onclick="openAdjustmentModal('${merchant.name}')" title="إضافة/إرجاع">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-info" onclick="viewAdjustments('${merchant.name}')" title="عرض التعديلات">
+                                    <i class="fas fa-list"></i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error loading merchants debts:', error);
+                showAlert('حدث خطأ في تحميل ديون التجار', 'danger');
+            }
+        }
+
+        // عرض كشف حساب التاجر
+        async function showMerchantStatement(merchantName) {
+            try {
+                const response = await fetch(`/get_merchant_statement/${encodeURIComponent(merchantName)}`);
+                const data = await response.json();
+                
+                const content = document.getElementById('merchantStatementContent');
+                content.innerHTML = `
+                    <div class="merchant-header mb-3">
+                        <h4>كشف حساب التاجر: ${merchantName}</h4>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h6>الرصيد الحالي</h6>
+                                    <h5 class="${data.summary.current_balance >= 0 ? 'text-danger' : 'text-success'}">
+                                        $${data.summary.current_balance.toFixed(2)}
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h6>إجمالي الديون</h6>
+                                    <h5 class="text-danger">$${data.summary.total_debt.toFixed(2)}</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h6>إجمالي المدفوعات</h6>
+                                    <h5 class="text-success">$${data.summary.total_payments.toFixed(2)}</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h6>عدد المعاملات</h6>
+                                    <h5 class="text-info">${data.summary.transaction_count}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h5><i class="fas fa-history"></i> سجلات المعاملات</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>التاريخ</th>
+                                    <th>الأجور</th>
+                                    <th>السلفة</th>
+                                    <th>كلفة التخليص</th>
+                                    <th>إجمالي الدين</th>
+                                    <th>ملاحظات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.records.map(record => `
+                                    <tr>
+                                        <td>${record.date}</td>
+                                        <td class="text-danger">$${(record.fees || 0).toFixed(2)}</td>
+                                        <td class="text-warning">$${(record.advance || 0).toFixed(2)}</td>
+                                        <td class="text-info">$${(record.clearance_cost || 0).toFixed(2)}</td>
+                                        <td class="text-danger fw-bold">$${(record.total_debt || 0).toFixed(2)}</td>
+                                        <td>${record.notes || '-'}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    ${data.payments && data.payments.length > 0 ? `
+                    <h5><i class="fas fa-money-bill-wave"></i> سجلات التسديدات</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>تاريخ التسديد</th>
+                                    <th>المبلغ المسدد</th>
+                                    <th>الرصيد قبل التسديد</th>
+                                    <th>الرصيد بعد التسديد</th>
+                                    <th>الملاحظات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.payments.map(payment => `
+                                    <tr>
+                                        <td>${payment.date || payment.payment_date}</td>
+                                        <td class="text-success fw-bold">$${(payment.amount || 0).toFixed(2)}</td>
+                                        <td class="text-danger">$${(payment.balance_before || 0).toFixed(2)}</td>
+                                        <td class="text-warning">$${(payment.balance_after || 0).toFixed(2)}</td>
+                                        <td>${payment.notes || '-'}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    ` : ''}
+                `;
+                
+                new bootstrap.Modal(document.getElementById('merchantStatementModal')).show();
+            } catch (error) {
+                console.error('Error loading merchant statement:', error);
+                showAlert('حدث خطأ في تحميل كشف الحساب', 'danger');
+            }
+        }
+
+        // طباعة التجار
+        function printMerchants() {
+            window.print();
+        }
+
+        // طباعة كشف الحساب
+        function printMerchantStatement() {
+            window.print();
+        }
+
+        // فتح نافذة الإضافة/الإرجاع
+        function openAdjustmentModal(merchantName) {
+            document.getElementById('adjustmentMerchantName').value = merchantName;
+            document.getElementById('adjustmentType').value = '';
+            document.getElementById('adjustmentAmount').value = '';
+            document.getElementById('adjustmentDescription').value = '';
+            document.getElementById('adjustmentNotes').value = '';
+            document.getElementById('adjustmentDate').value = new Date().toISOString().split('T')[0];
+            
+            new bootstrap.Modal(document.getElementById('merchantAdjustmentModal')).show();
+        }
+
+        // حفظ التعديل (إضافة/إرجاع)
+        async function saveAdjustment() {
+            try {
+                const merchantName = document.getElementById('adjustmentMerchantName').value;
+                const adjustmentType = document.getElementById('adjustmentType').value;
+                const amount = parseFloat(document.getElementById('adjustmentAmount').value);
+                const description = document.getElementById('adjustmentDescription').value;
+                const notes = document.getElementById('adjustmentNotes').value;
+                const date = document.getElementById('adjustmentDate').value;
+
+                if (!merchantName || !adjustmentType || !amount || amount <= 0) {
+                    showAlert('يرجى ملء جميع الحقول المطلوبة', 'warning');
+                    return;
+                }
+
+                const response = await fetch('/add_merchant_adjustment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        merchant_name: merchantName,
+                        adjustment_type: adjustmentType,
+                        amount: amount,
+                        description: description,
+                        notes: notes,
+                        date: date
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showAlert(result.message, 'success');
+                    bootstrap.Modal.getInstance(document.getElementById('merchantAdjustmentModal')).hide();
+                    loadMerchantsDebts(); // إعادة تحميل البيانات
+                } else {
+                    showAlert(result.message || 'حدث خطأ في حفظ التعديل', 'danger');
+                }
+            } catch (error) {
+                console.error('Error saving adjustment:', error);
+                showAlert('حدث خطأ في حفظ التعديل', 'danger');
+            }
+        }
+
+        // عرض تعديلات التاجر
+        async function viewAdjustments(merchantName) {
+            try {
+                const response = await fetch(`/get_merchant_adjustments/${encodeURIComponent(merchantName)}`);
+                const data = await response.json();
+
+                const content = document.getElementById('adjustmentsViewContent');
+                
+                if (!data.success) {
+                    content.innerHTML = '<div class="alert alert-danger">حدث خطأ في تحميل التعديلات</div>';
+                    new bootstrap.Modal(document.getElementById('viewAdjustmentsModal')).show();
+                    return;
+                }
+
+                let adjustmentsHtml = `
+                    <div class="merchant-adjustments-header mb-3">
+                        <h4>سجل الإضافات والإرجاعات للتاجر: ${merchantName}</h4>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <div class="card text-center bg-success text-white">
+                                <div class="card-body">
+                                    <h6>إجمالي الإضافات</h6>
+                                    <h5>$${data.summary.total_additions.toFixed(2)}</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card text-center bg-danger text-white">
+                                <div class="card-body">
+                                    <h6>إجمالي الإرجاعات</h6>
+                                    <h5>$${data.summary.total_returns.toFixed(2)}</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card text-center bg-primary text-white">
+                                <div class="card-body">
+                                    <h6>صافي التعديل</h6>
+                                    <h5>$${data.summary.net_adjustment.toFixed(2)}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                if (data.adjustments.length === 0) {
+                    adjustmentsHtml += '<div class="alert alert-info">لا توجد تعديلات لهذا التاجر</div>';
+                } else {
+                    adjustmentsHtml += `
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>التاريخ</th>
+                                        <th>النوع</th>
+                                        <th>المبلغ</th>
+                                        <th>الوصف</th>
+                                        <th>الملاحظات</th>
+                                        <th>تاريخ الإنشاء</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+
+                    data.adjustments.forEach(adj => {
+                        const typeText = adj.adjustment_type === 'addition' ? 'إضافة' : 'إرجاع';
+                        const typeClass = adj.adjustment_type === 'addition' ? 'text-success' : 'text-danger';
+                        
+                        adjustmentsHtml += `
+                            <tr>
+                                <td>${adj.date}</td>
+                                <td class="${typeClass}"><strong>${typeText}</strong></td>
+                                <td>$${adj.amount.toFixed(2)}</td>
+                                <td>${adj.description || '-'}</td>
+                                <td>${adj.notes || '-'}</td>
+                                <td>${adj.created_at}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteAdjustment(${adj.id})" title="حذف">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+
+                    adjustmentsHtml += '</tbody></table></div>';
+                }
+
+                content.innerHTML = adjustmentsHtml;
+                new bootstrap.Modal(document.getElementById('viewAdjustmentsModal')).show();
+
+            } catch (error) {
+                console.error('Error loading adjustments:', error);
+                showAlert('حدث خطأ في تحميل التعديلات', 'danger');
+            }
+        }
+
+        // حذف تعديل
+        async function deleteAdjustment(adjustmentId) {
+            if (!confirm('هل أنت متأكد من حذف هذا التعديل؟')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/delete_merchant_adjustment/${adjustmentId}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showAlert(result.message, 'success');
+                    // إعادة تحميل التعديلات في النافذة المفتوحة
+                    const merchantName = document.getElementById('adjustmentMerchantName').value || 
+                                        document.querySelector('.merchant-adjustments-header h4').textContent.split(': ')[1];
+                    if (merchantName) {
+                        viewAdjustments(merchantName);
+                    }
+                    loadMerchantsDebts(); // إعادة تحميل بيانات التجار الرئيسية
+                } else {
+                    showAlert(result.message || 'حدث خطأ في حذف التعديل', 'danger');
+                }
+            } catch (error) {
+                console.error('Error deleting adjustment:', error);
+                showAlert('حدث خطأ في حذف التعديل', 'danger');
+            }
+        }
+
+        // عرض التنبيهات
+        function showAlert(message, type = 'info') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.parentNode.removeChild(alertDiv);
+                }
+            }, 5000);
+        }
+
+        // تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMerchantsDebts();
+        });
+    </script>
+</body>
+</html>

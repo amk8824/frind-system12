@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة المستخدمين - نظام الأصدقاء للتخليص الكمركي</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #002147 0%, #004d99 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+        
+        .main-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            margin: 20px;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #002147 0%, #004d99 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #002147 0%, #004d99 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-weight: 600;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-weight: 600;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 8px 15px;
+            font-weight: 600;
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107 0%, #f39c12 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 8px 15px;
+            font-weight: 600;
+            color: #212529;
+        }
+        
+        .table {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .table thead {
+            background: #002147;
+            color: white;
+        }
+        
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #002147 0%, #004d99 100%);
+            color: white;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+        
+        .form-control {
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            padding: 12px;
+        }
+        
+        .form-control:focus {
+            border-color: #002147;
+            box-shadow: 0 0 0 0.25rem rgba(0, 33, 71, 0.1);
+        }
+        
+        .badge {
+            font-size: 0.875rem;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+        
+        .badge.bg-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
+        }
+        
+        .badge.bg-warning {
+            background: linear-gradient(135deg, #ffc107 0%, #f39c12 100%) !important;
+            color: #212529 !important;
+        }
+        
+        .badge.bg-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%) !important;
+        }
+        
+        .nav-link {
+            background: #002147;
+            color: white;
+            border-radius: 10px;
+            margin: 0 5px;
+            font-weight: 600;
+        }
+        
+        .nav-link:hover {
+            background: #004d99;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="main-container">
+            <div class="header">
+                <h1>👥 إدارة المستخدمين</h1>
+                <p>التحكم في صلاحيات النظام</p>
+                
+                <!-- Navigation -->
+                <div class="mt-3">
+                    <a href="/" class="nav-link d-inline-block">🏠 العودة للرئيسية</a>
+                    <button class="nav-link d-inline-block" onclick="logout()">🚪 تسجيل الخروج</button>
+                </div>
+            </div>
+            
+            <div class="content">
+                <!-- Add User Button -->
+                <div class="mb-4">
+                    <button class="btn btn-success" onclick="openAddUserModal()">
+                        ➕ إضافة مستخدم جديد
+                    </button>
+                </div>
+                
+                <!-- Users Table -->
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>اسم المستخدم</th>
+                                <th>الاسم الكامل</th>
+                                <th>البريد الإلكتروني</th>
+                                <th>الدور</th>
+                                <th>الحالة</th>
+                                <th>تاريخ الإنشاء</th>
+                                <th>آخر دخول</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- سيتم تحميل البيانات بواسطة JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add User Modal -->
+    <div class="modal fade" id="addUserModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">إضافة مستخدم جديد</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addUserForm">
+                        <div class="mb-3">
+                            <label class="form-label">اسم المستخدم *</label>
+                            <input type="text" class="form-control" id="newUsername" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">الاسم الكامل *</label>
+                            <input type="text" class="form-control" id="newFullName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">البريد الإلكتروني *</label>
+                            <input type="email" class="form-control" id="newEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">كلمة المرور *</label>
+                            <input type="password" class="form-control" id="newPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">الدور *</label>
+                            <select class="form-control" id="newRole" required>
+                                <option value="admin">مدير - صلاحية كاملة</option>
+                                <option value="data_entry">مدخل بيانات - صلاحية محدودة</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-success" onclick="addUser()">إضافة المستخدم</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit User Modal -->
+    <div class="modal fade" id="editUserModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تعديل بيانات المستخدم</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editUserForm">
+                        <input type="hidden" id="editUserId">
+                        <div class="mb-3">
+                            <label class="form-label">اسم المستخدم</label>
+                            <input type="text" class="form-control" id="editUsername" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">الاسم الكامل</label>
+                            <input type="text" class="form-control" id="editFullName">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">البريد الإلكتروني</label>
+                            <input type="email" class="form-control" id="editEmail">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">كلمة المرور الجديدة (اتركها فارغة لعدم التغيير)</label>
+                            <input type="password" class="form-control" id="editPassword">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">الدور</label>
+                            <select class="form-control" id="editRole">
+                                <option value="admin">مدير - صلاحية كاملة</option>
+                                <option value="data_entry">مدخل بيانات - صلاحية محدودة</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="editActive">
+                                <label class="form-check-label" for="editActive">
+                                    حساب نشط
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" onclick="updateUser()">حفظ التغييرات</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // تحميل المستخدمين عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', loadUsers);
+        
+        async function loadUsers() {
+            try {
+                const response = await fetch('/get_users');
+                const users = await response.json();
+                
+                const tbody = document.getElementById('usersTableBody');
+                tbody.innerHTML = '';
+                
+                users.forEach(user => {
+                    const roleText = user.role === 'admin' ? 'مدير' : 'مدخل بيانات';
+                    const roleClass = user.role === 'admin' ? 'bg-success' : 'bg-warning';
+                    const statusText = user.active ? 'نشط' : 'معطل';
+                    const statusClass = user.active ? 'bg-success' : 'bg-danger';
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><strong>${user.username}</strong></td>
+                        <td>${user.full_name}</td>
+                        <td>${user.email}</td>
+                        <td><span class="badge ${roleClass}">${roleText}</span></td>
+                        <td><span class="badge ${statusClass}">${statusText}</span></td>
+                        <td>${user.created_at}</td>
+                        <td>${user.last_login}</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm me-2" onclick="openEditUserModal(${user.id})">
+                                ✏️ تعديل
+                            </button>
+                            ${user.username !== 'admin' ? `
+                                <button class="btn btn-danger btn-sm" onclick="deleteUser(${user.id}, '${user.username}')">
+                                    🗑️ حذف
+                                </button>
+                            ` : ''}
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error loading users:', error);
+                alert('حدث خطأ في تحميل المستخدمين');
+            }
+        }
+        
+        function openAddUserModal() {
+            document.getElementById('addUserForm').reset();
+            new bootstrap.Modal(document.getElementById('addUserModal')).show();
+        }
+        
+        async function addUser() {
+            const userData = {
+                username: document.getElementById('newUsername').value,
+                full_name: document.getElementById('newFullName').value,
+                email: document.getElementById('newEmail').value,
+                password: document.getElementById('newPassword').value,
+                role: document.getElementById('newRole').value
+            };
+            
+            if (!userData.username || !userData.full_name || !userData.email || !userData.password) {
+                alert('يرجى ملء جميع الحقول المطلوبة');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/add_user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('تم إضافة المستخدم بنجاح');
+                    bootstrap.Modal.getInstance(document.getElementById('addUserModal')).hide();
+                    loadUsers();
+                } else {
+                    alert('خطأ: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error adding user:', error);
+                alert('حدث خطأ في إضافة المستخدم');
+            }
+        }
+        
+        async function openEditUserModal(userId) {
+            try {
+                const response = await fetch('/get_users');
+                const users = await response.json();
+                const user = users.find(u => u.id === userId);
+                
+                if (user) {
+                    document.getElementById('editUserId').value = user.id;
+                    document.getElementById('editUsername').value = user.username;
+                    document.getElementById('editFullName').value = user.full_name;
+                    document.getElementById('editEmail').value = user.email;
+                    document.getElementById('editRole').value = user.role;
+                    document.getElementById('editActive').checked = user.active;
+                    document.getElementById('editPassword').value = '';
+                    
+                    new bootstrap.Modal(document.getElementById('editUserModal')).show();
+                }
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                alert('حدث خطأ في تحميل بيانات المستخدم');
+            }
+        }
+        
+        async function updateUser() {
+            const userId = document.getElementById('editUserId').value;
+            const userData = {
+                full_name: document.getElementById('editFullName').value,
+                email: document.getElementById('editEmail').value,
+                role: document.getElementById('editRole').value,
+                active: document.getElementById('editActive').checked
+            };
+            
+            const password = document.getElementById('editPassword').value;
+            if (password) {
+                userData.password = password;
+            }
+            
+            try {
+                const response = await fetch(`/update_user/${userId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('تم تحديث بيانات المستخدم بنجاح');
+                    bootstrap.Modal.getInstance(document.getElementById('editUserModal')).hide();
+                    loadUsers();
+                } else {
+                    alert('خطأ: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error updating user:', error);
+                alert('حدث خطأ في تحديث المستخدم');
+            }
+        }
+        
+        async function deleteUser(userId, username) {
+            if (!confirm(`هل أنت متأكد من حذف المستخدم "${username}"؟\nهذا الإجراء لا يمكن التراجع عنه.`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/delete_user/${userId}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('تم حذف المستخدم بنجاح');
+                    loadUsers();
+                } else {
+                    alert('خطأ: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error deleting user:', error);
+                alert('حدث خطأ في حذف المستخدم');
+            }
+        }
+        
+        function logout() {
+            if (confirm('هل تريد تسجيل الخروج؟')) {
+                window.location.href = '/logout';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,4610 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - نظام الأصدقاء للتخليص الكمركي</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 30%, #002147 70%, #1a1a2e 100%);
+            width: 100vw;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+            margin: 0;
+            padding: 0;
+            animation: gradientShift 12s ease-in-out infinite;
+            background-size: 600% 600%;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            25% {
+                background-position: 100% 30%;
+            }
+            50% {
+                background-position: 50% 100%;
+            }
+            75% {
+                background-position: 20% 70%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* جسيمات ضوئية متطايرة */
+        .light-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .light-particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,215,0,0.4) 50%, transparent 100%);
+            border-radius: 50%;
+            animation: lightFloat linear infinite;
+        }
+
+        .light-particle:nth-child(1) {
+            width: 4px; height: 4px; left: 10%; 
+            animation-duration: 20s; animation-delay: 0s;
+        }
+        .light-particle:nth-child(2) {
+            width: 6px; height: 6px; left: 20%; 
+            animation-duration: 25s; animation-delay: 3s;
+        }
+        .light-particle:nth-child(3) {
+            width: 3px; height: 3px; left: 30%; 
+            animation-duration: 18s; animation-delay: 6s;
+        }
+        .light-particle:nth-child(4) {
+            width: 5px; height: 5px; left: 40%; 
+            animation-duration: 22s; animation-delay: 9s;
+        }
+        .light-particle:nth-child(5) {
+            width: 4px; height: 4px; left: 50%; 
+            animation-duration: 28s; animation-delay: 12s;
+        }
+        .light-particle:nth-child(6) {
+            width: 7px; height: 7px; left: 60%; 
+            animation-duration: 24s; animation-delay: 15s;
+        }
+        .light-particle:nth-child(7) {
+            width: 3px; height: 3px; left: 70%; 
+            animation-duration: 19s; animation-delay: 18s;
+        }
+        .light-particle:nth-child(8) {
+            width: 5px; height: 5px; left: 80%; 
+            animation-duration: 26s; animation-delay: 21s;
+        }
+        .light-particle:nth-child(9) {
+            width: 4px; height: 4px; left: 90%; 
+            animation-duration: 23s; animation-delay: 24s;
+        }
+
+        @keyframes lightFloat {
+            0% {
+                transform: translateY(100vh) rotate(0deg) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(90vh) rotate(36deg) scale(1);
+            }
+            90% {
+                opacity: 1;
+                transform: translateY(10vh) rotate(324deg) scale(1);
+            }
+            100% {
+                transform: translateY(-10vh) rotate(360deg) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* موجات ضوئية في الخلفية */
+        .light-waves {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: 
+                radial-gradient(ellipse at 20% 30%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(0, 33, 71, 0.1) 0%, transparent 50%);
+            animation: waveMove 15s ease-in-out infinite;
+        }
+
+        @keyframes waveMove {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 0.3;
+            }
+            33% {
+                transform: scale(1.1) rotate(120deg);
+                opacity: 0.5;
+            }
+            66% {
+                transform: scale(0.9) rotate(240deg);
+                opacity: 0.4;
+            }
+        }
+
+        /* نجوم متلألئة */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -3;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: starTwinkle 3s ease-in-out infinite;
+        }
+
+        .star:nth-child(1) { width: 2px; height: 2px; top: 20%; left: 10%; animation-delay: 0s; }
+        .star:nth-child(2) { width: 3px; height: 3px; top: 30%; left: 20%; animation-delay: 0.5s; }
+        .star:nth-child(3) { width: 1px; height: 1px; top: 10%; left: 30%; animation-delay: 1s; }
+        .star:nth-child(4) { width: 2px; height: 2px; top: 40%; left: 40%; animation-delay: 1.5s; }
+        .star:nth-child(5) { width: 3px; height: 3px; top: 15%; left: 50%; animation-delay: 2s; }
+        .star:nth-child(6) { width: 1px; height: 1px; top: 25%; left: 60%; animation-delay: 2.5s; }
+        .star:nth-child(7) { width: 2px; height: 2px; top: 35%; left: 70%; animation-delay: 0.3s; }
+        .star:nth-child(8) { width: 3px; height: 3px; top: 45%; left: 80%; animation-delay: 0.8s; }
+        .star:nth-child(9) { width: 1px; height: 1px; top: 5%; left: 90%; animation-delay: 1.3s; }
+        .star:nth-child(10) { width: 2px; height: 2px; top: 50%; left: 15%; animation-delay: 1.8s; }
+
+        @keyframes starTwinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+
+        /* غيوم متحركة */
+        .clouds {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -4;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .cloud {
+            position: absolute;
+            background: radial-gradient(ellipse, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: cloudMove linear infinite;
+        }
+
+        .cloud:nth-child(1) {
+            width: 100px; height: 60px; top: 10%;
+            animation-duration: 60s; animation-delay: 0s;
+        }
+        .cloud:nth-child(2) {
+            width: 150px; height: 80px; top: 20%;
+            animation-duration: 80s; animation-delay: 10s;
+        }
+        .cloud:nth-child(3) {
+            width: 120px; height: 70px; top: 15%;
+            animation-duration: 70s; animation-delay: 20s;
+        }
+
+        @keyframes cloudMove {
+            0% { transform: translateX(-150px); }
+            100% { transform: translateX(calc(100vw + 150px)); }
+        }
+
+        /* أضواء المدينة */
+        .city-lights {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            z-index: -5;
+            background: linear-gradient(to top, rgba(255,215,0,0.1) 0%, transparent 100%);
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .city-light {
+            position: absolute;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to top, #ffd700, transparent);
+            animation: lightFlicker 4s ease-in-out infinite;
+        }
+
+        .city-light:nth-child(1) { height: 120px; left: 5%; animation-delay: 0s; }
+        .city-light:nth-child(2) { height: 80px; left: 15%; animation-delay: 0.5s; }
+        .city-light:nth-child(3) { height: 100px; left: 25%; animation-delay: 1s; }
+        .city-light:nth-child(4) { height: 90px; left: 35%; animation-delay: 1.5s; }
+        .city-light:nth-child(5) { height: 110px; left: 45%; animation-delay: 2s; }
+        .city-light:nth-child(6) { height: 70px; left: 55%; animation-delay: 2.5s; }
+        .city-light:nth-child(7) { height: 95px; left: 65%; animation-delay: 3s; }
+        .city-light:nth-child(8) { height: 85px; left: 75%; animation-delay: 3.5s; }
+        .city-light:nth-child(9) { height: 105px; left: 85%; animation-delay: 0.3s; }
+        .city-light:nth-child(10) { height: 75px; left: 95%; animation-delay: 1.8s; }
+
+        @keyframes lightFlicker {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+
+        /* بوابات كمركية */
+        .customs-gates {
+            position: fixed;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 60px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .gate-post {
+            position: absolute;
+            width: 12px;
+            height: 60px;
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            border-radius: 6px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .gate-post.left { left: 20px; }
+        .gate-post.right { right: 20px; }
+
+        .gate-barrier {
+            position: absolute;
+            top: 30px;
+            left: 32px;
+            width: 136px;
+            height: 8px;
+            background: repeating-linear-gradient(
+                45deg,
+                #e74c3c,
+                #e74c3c 15px,
+                #ffffff 15px,
+                #ffffff 30px
+            );
+            border-radius: 4px;
+            animation: barrierMove 8s ease-in-out infinite;
+            transform-origin: left center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        @keyframes barrierMove {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-45deg); }
+            50% { transform: rotate(-60deg); }
+            75% { transform: rotate(-30deg); }
+        }
+
+        /* إشارات مرورية */
+        .traffic-lights {
+            position: fixed;
+            bottom: 130px;
+            right: 25%;
+            width: 20px;
+            height: 80px;
+            background: #2c3e50;
+            border-radius: 10px;
+            z-index: 1;
+            pointer-events: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .traffic-light {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin: 6px auto;
+            position: relative;
+        }
+
+        .red-light {
+            background: #e74c3c;
+            animation: redBlink 6s ease-in-out infinite;
+        }
+
+        .yellow-light {
+            background: #f1c40f;
+            animation: yellowBlink 6s ease-in-out infinite;
+        }
+
+        .green-light {
+            background: #27ae60;
+            animation: greenBlink 6s ease-in-out infinite;
+        }
+
+        @keyframes redBlink {
+            0%, 33% { opacity: 1; box-shadow: 0 0 10px #e74c3c; }
+            34%, 100% { opacity: 0.3; box-shadow: none; }
+        }
+
+        @keyframes yellowBlink {
+            0%, 33%, 67% { opacity: 0.3; box-shadow: none; }
+            34%, 66% { opacity: 1; box-shadow: 0 0 10px #f1c40f; }
+        }
+
+        @keyframes greenBlink {
+            0%, 66% { opacity: 0.3; box-shadow: none; }
+            67%, 100% { opacity: 1; box-shadow: 0 0 10px #27ae60; }
+        }
+
+        /* مباني كمركية في الخلفية */
+        .customs-buildings {
+            position: fixed;
+            bottom: 70px;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            z-index: -6;
+            pointer-events: none;
+        }
+
+        .building {
+            position: absolute;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .building-1 {
+            width: 80px;
+            height: 120px;
+            left: 5%;
+            bottom: 0;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .building-2 {
+            width: 100px;
+            height: 90px;
+            left: 15%;
+            bottom: 0;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .building-3 {
+            width: 70px;
+            height: 110px;
+            right: 10%;
+            bottom: 0;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .building-windows {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #f1c40f;
+            border-radius: 2px;
+            animation: windowBlink 5s ease-in-out infinite;
+        }
+
+        .building-1 .building-windows:nth-child(1) { top: 20px; left: 15px; animation-delay: 0s; }
+        .building-1 .building-windows:nth-child(2) { top: 20px; right: 15px; animation-delay: 1s; }
+        .building-1 .building-windows:nth-child(3) { top: 50px; left: 15px; animation-delay: 2s; }
+        .building-1 .building-windows:nth-child(4) { top: 50px; right: 15px; animation-delay: 3s; }
+
+        .building-2 .building-windows:nth-child(1) { top: 20px; left: 20px; animation-delay: 0.5s; }
+        .building-2 .building-windows:nth-child(2) { top: 20px; right: 20px; animation-delay: 1.5s; }
+        .building-2 .building-windows:nth-child(3) { top: 40px; left: 20px; animation-delay: 2.5s; }
+
+        .building-3 .building-windows:nth-child(1) { top: 25px; left: 15px; animation-delay: 1s; }
+        .building-3 .building-windows:nth-child(2) { top: 25px; right: 15px; animation-delay: 2s; }
+        .building-3 .building-windows:nth-child(3) { top: 55px; left: 15px; animation-delay: 3s; }
+
+        @keyframes windowBlink {
+            0%, 70% { opacity: 0.3; }
+            71%, 85% { opacity: 1; }
+            86%, 100% { opacity: 0.3; }
+        }
+
+        /* تأثيرات ضوئية متقدمة للنموذج */
+        .login-form-content::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ffd700, #667eea, #764ba2, #ffd700);
+            background-size: 300% 300%;
+            z-index: -1;
+            border-radius: 22px;
+            animation: borderGlow 8s ease-in-out infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% {
+                background-position: 0% 50%;
+                opacity: 0.7;
+            }
+            25% {
+                background-position: 100% 50%;
+                opacity: 0.9;
+            }
+            50% {
+                background-position: 50% 100%;
+                opacity: 1;
+            }
+            75% {
+                background-position: 50% 0%;
+                opacity: 0.8;
+            }
+        }
+
+        /* تأثيرات الضوء المنعكس */
+        .company-logo::after {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 30%;
+            height: 30%;
+            background: radial-gradient(ellipse, rgba(255,255,255,0.8) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: logoReflection 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes logoReflection {
+            0%, 100% {
+                transform: scale(1) translate(0, 0);
+                opacity: 0.6;
+            }
+            50% {
+                transform: scale(1.2) translate(5px, -5px);
+                opacity: 0.9;
+            }
+        }
+
+        /* تأثيرات البخار/الضباب */
+        .steam-effects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .steam {
+            position: absolute;
+            background: radial-gradient(ellipse, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: steamRise linear infinite;
+        }
+
+        .steam:nth-child(1) {
+            width: 80px; height: 120px; left: 10%; bottom: -120px;
+            animation-duration: 15s; animation-delay: 0s;
+        }
+        .steam:nth-child(2) {
+            width: 60px; height: 90px; left: 80%; bottom: -90px;
+            animation-duration: 18s; animation-delay: 3s;
+        }
+        .steam:nth-child(3) {
+            width: 100px; height: 150px; left: 60%; bottom: -150px;
+            animation-duration: 20s; animation-delay: 6s;
+        }
+
+        @keyframes steamRise {
+            0% {
+                transform: translateY(0) scale(1) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            50% {
+                transform: translateY(-50vh) scale(1.5) rotate(180deg);
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.2;
+            }
+            100% {
+                transform: translateY(-100vh) scale(2) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* أضواء متحركة في الأرضية */
+        .floor-lights {
+            position: fixed;
+            bottom: 70px;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .floor-light-beam {
+            position: absolute;
+            width: 4px;
+            height: 100px;
+            background: linear-gradient(to top, rgba(255,215,0,0.8) 0%, transparent 100%);
+            animation: beamSweep 12s ease-in-out infinite;
+            transform-origin: bottom center;
+        }
+
+        .floor-light-beam:nth-child(1) {
+            left: 20%;
+            animation-delay: 0s;
+        }
+        .floor-light-beam:nth-child(2) {
+            left: 40%;
+            animation-delay: 2s;
+        }
+        .floor-light-beam:nth-child(3) {
+            left: 60%;
+            animation-delay: 4s;
+        }
+        .floor-light-beam:nth-child(4) {
+            left: 80%;
+            animation-delay: 6s;
+        }
+
+        @keyframes beamSweep {
+            0%, 90% {
+                transform: rotate(0deg) scaleY(1);
+                opacity: 0.3;
+            }
+            5% {
+                transform: rotate(-30deg) scaleY(1.5);
+                opacity: 0.8;
+            }
+            10% {
+                transform: rotate(30deg) scaleY(2);
+                opacity: 1;
+            }
+            15% {
+                transform: rotate(0deg) scaleY(1);
+                opacity: 0.6;
+            }
+            100% {
+                transform: rotate(0deg) scaleY(1);
+                opacity: 0.3;
+            }
+        }
+
+        /* القمر والضوء القمري */
+        .moon {
+            position: fixed;
+            top: 8%;
+            right: 12%;
+            width: 90px;
+            height: 90px;
+            background: 
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.95) 30%, rgba(245, 245, 245, 0.9) 60%, rgba(230, 230, 230, 0.8) 100%),
+                radial-gradient(circle at 60% 40%, rgba(200, 200, 200, 0.3) 0%, transparent 40%);
+            border-radius: 50%;
+            z-index: -1;
+            animation: moonGlow 10s ease-in-out infinite;
+            box-shadow: 
+                0 0 40px rgba(255, 255, 255, 0.8),
+                0 0 80px rgba(255, 255, 255, 0.6),
+                0 0 120px rgba(255, 255, 255, 0.4),
+                0 0 160px rgba(255, 255, 255, 0.2);
+            pointer-events: none;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .moon::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 25%;
+            width: 12px;
+            height: 12px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            box-shadow: 
+                15px 8px 0 -2px rgba(0, 0, 0, 0.08),
+                25px -5px 0 -3px rgba(0, 0, 0, 0.06),
+                -8px 15px 0 -1px rgba(0, 0, 0, 0.05);
+        }
+
+        @keyframes moonGlow {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+                box-shadow: 
+                    0 0 30px rgba(255, 255, 255, 0.6),
+                    0 0 60px rgba(255, 255, 255, 0.4),
+                    0 0 90px rgba(255, 255, 255, 0.2);
+            }
+            50% {
+                transform: scale(1.1) rotate(5deg);
+                box-shadow: 
+                    0 0 40px rgba(255, 255, 255, 0.8),
+                    0 0 80px rgba(255, 255, 255, 0.6),
+                    0 0 120px rgba(255, 255, 255, 0.3);
+            }
+        }
+
+        /* أشعة الضوء القمري */
+        .moonlight-rays {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .moonlight-ray {
+            position: absolute;
+            top: 15%;
+            right: 20%;
+            width: 3px;
+            height: 300px;
+            background: linear-gradient(to bottom, 
+                rgba(255, 255, 255, 0.3) 0%, 
+                rgba(255, 255, 255, 0.1) 50%, 
+                transparent 100%);
+            transform-origin: top center;
+            animation: rayMove 12s ease-in-out infinite;
+        }
+
+        .moonlight-ray:nth-child(1) {
+            transform: rotate(-15deg);
+            animation-delay: 0s;
+        }
+        .moonlight-ray:nth-child(2) {
+            transform: rotate(-5deg);
+            animation-delay: 2s;
+        }
+        .moonlight-ray:nth-child(3) {
+            transform: rotate(5deg);
+            animation-delay: 4s;
+        }
+        .moonlight-ray:nth-child(4) {
+            transform: rotate(15deg);
+            animation-delay: 6s;
+        }
+        .moonlight-ray:nth-child(5) {
+            transform: rotate(25deg);
+            animation-delay: 8s;
+        }
+
+        @keyframes rayMove {
+            0%, 100% {
+                opacity: 0.3;
+                transform: rotate(var(--initial-rotation, 0deg)) scaleY(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: rotate(calc(var(--initial-rotation, 0deg) + 10deg)) scaleY(1.2);
+            }
+        }
+
+        /* غبار القمر المتلألئ */
+        .moon-dust {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .dust-particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: dustFloat linear infinite;
+        }
+
+        .dust-particle:nth-child(1) {
+            width: 3px; height: 3px; left: 20%; 
+            animation-duration: 25s; animation-delay: 0s;
+        }
+        .dust-particle:nth-child(2) {
+            width: 2px; height: 2px; left: 40%; 
+            animation-duration: 30s; animation-delay: 5s;
+        }
+        .dust-particle:nth-child(3) {
+            width: 4px; height: 4px; left: 60%; 
+            animation-duration: 22s; animation-delay: 10s;
+        }
+        .dust-particle:nth-child(4) {
+            width: 2px; height: 2px; left: 80%; 
+            animation-duration: 28s; animation-delay: 15s;
+        }
+        .dust-particle:nth-child(5) {
+            width: 3px; height: 3px; left: 30%; 
+            animation-duration: 26s; animation-delay: 20s;
+        }
+
+        @keyframes dustFloat {
+            0% {
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(90vh) translateX(10px) scale(1);
+            }
+            50% {
+                transform: translateY(50vh) translateX(-20px) scale(1.2);
+            }
+            90% {
+                opacity: 1;
+                transform: translateY(10vh) translateX(15px) scale(1);
+            }
+            100% {
+                transform: translateY(-10vh) translateX(-10px) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* توهج القمر على الأرض */
+        .moonlight-ground {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background: radial-gradient(ellipse at 70% 100%, 
+                rgba(255, 255, 255, 0.05) 0%, 
+                rgba(255, 255, 255, 0.02) 40%, 
+                transparent 70%);
+            z-index: -3;
+            animation: groundGlow 10s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes groundGlow {
+            0%, 100% {
+                opacity: 0.6;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.9;
+                transform: scale(1.1);
+            }
+        }
+
+        /* رافعة الموانئ الطويلة */
+        .port-crane {
+            position: fixed;
+            left: 5%;
+            bottom: 70px;
+            width: 200px;
+            height: 350px;
+            z-index: 1;
+            pointer-events: none;
+            animation: craneOverallSway 15s ease-in-out infinite;
+        }
+
+        /* قاعدة الرافعة */
+        .crane-tower {
+            position: absolute;
+            bottom: 0;
+            left: 80px;
+            width: 40px;
+            height: 280px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
+            border-radius: 8px;
+            box-shadow: 
+                0 8px 16px rgba(0,0,0,0.3),
+                inset 0 2px 4px rgba(255,255,255,0.1);
+        }
+
+        /* هيكل الرافعة العلوي */
+        .crane-jib {
+            position: absolute;
+            bottom: 250px;
+            left: 0;
+            width: 180px;
+            height: 15px;
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            border-radius: 8px;
+            transform-origin: 80px 7px;
+            animation: jibRotate 20s ease-in-out infinite;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        /* ذراع التوازن */
+        .crane-counter-jib {
+            position: absolute;
+            bottom: 250px;
+            left: 80px;
+            width: 60px;
+            height: 12px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            border-radius: 6px;
+            transform: rotate(180deg);
+            transform-origin: 0 6px;
+            animation: counterJibMove 20s ease-in-out infinite;
+        }
+
+        /* كابينة المشغل */
+        .crane-cabin {
+            position: absolute;
+            bottom: 200px;
+            left: 70px;
+            width: 60px;
+            height: 40px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .cabin-windows {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            width: 44px;
+            height: 24px;
+            background: linear-gradient(135deg, #87ceeb, #b0e0e6);
+            border-radius: 4px;
+            animation: windowGlow 5s ease-in-out infinite;
+        }
+
+        /* عربة الرافعة */
+        .crane-trolley {
+            position: absolute;
+            top: -8px;
+            left: 40px;
+            width: 20px;
+            height: 15px;
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            border-radius: 4px;
+            animation: trolleyMove 20s ease-in-out infinite;
+        }
+
+        /* الخطافات والكابلات */
+        .crane-cable {
+            position: absolute;
+            top: 15px;
+            left: 9px;
+            width: 2px;
+            height: 120px;
+            background: linear-gradient(to bottom, #34495e, #2c3e50);
+            animation: cableSwing 8s ease-in-out infinite;
+            transform-origin: top center;
+        }
+
+        .crane-hook {
+            position: absolute;
+            bottom: -15px;
+            left: -6px;
+            width: 14px;
+            height: 15px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 50% 50% 0 0;
+            animation: hookSway 8s ease-in-out infinite;
+        }
+
+        /* حاوية الشحن المعلقة */
+        .hanging-container {
+            position: absolute;
+            bottom: -45px;
+            left: -15px;
+            width: 30px;
+            height: 20px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            border-radius: 4px;
+            animation: containerSwing 8s ease-in-out infinite;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        /* أضواء الرافعة */
+        .crane-lights {
+            position: absolute;
+            top: -20px;
+            left: 75px;
+            width: 50px;
+            height: 20px;
+        }
+
+        .crane-light {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #f1c40f;
+            border-radius: 50%;
+            animation: craneLightBlink 3s ease-in-out infinite;
+        }
+
+        .crane-light:nth-child(1) { left: 0; animation-delay: 0s; }
+        .crane-light:nth-child(2) { left: 20px; animation-delay: 1s; }
+        .crane-light:nth-child(3) { right: 0; animation-delay: 2s; }
+
+        /* الحركات والتحريك */
+        @keyframes craneOverallSway {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(1deg) scale(1.02); }
+            50% { transform: rotate(0deg) scale(1.05); }
+            75% { transform: rotate(-1deg) scale(1.02); }
+        }
+
+        @keyframes jibRotate {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-15deg); }
+            50% { transform: rotate(-25deg); }
+            75% { transform: rotate(-10deg); }
+        }
+
+        @keyframes counterJibMove {
+            0%, 100% { transform: rotate(180deg); }
+            25% { transform: rotate(195deg); }
+            50% { transform: rotate(205deg); }
+            75% { transform: rotate(190deg); }
+        }
+
+        @keyframes trolleyMove {
+            0%, 100% { left: 40px; }
+            25% { left: 60px; }
+            50% { left: 100px; }
+            75% { left: 80px; }
+        }
+
+        @keyframes cableSwing {
+            0%, 100% { transform: rotate(0deg) scaleY(1); }
+            25% { transform: rotate(3deg) scaleY(1.1); }
+            50% { transform: rotate(-2deg) scaleY(1.2); }
+            75% { transform: rotate(1deg) scaleY(1.1); }
+        }
+
+        @keyframes hookSway {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(5deg) scale(1.1); }
+            50% { transform: rotate(-3deg) scale(1.2); }
+            75% { transform: rotate(2deg) scale(1.1); }
+        }
+
+        @keyframes containerSwing {
+            0%, 100% { transform: rotate(0deg) translateY(0); }
+            25% { transform: rotate(2deg) translateY(-5px); }
+            50% { transform: rotate(-1deg) translateY(-8px); }
+            75% { transform: rotate(1deg) translateY(-3px); }
+        }
+
+        @keyframes craneLightBlink {
+            0%, 70% { opacity: 0.3; box-shadow: none; }
+            71%, 85% { opacity: 1; box-shadow: 0 0 15px #f1c40f; }
+            86%, 100% { opacity: 0.3; box-shadow: none; }
+        }
+
+        @keyframes windowGlow {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; box-shadow: 0 0 10px rgba(135, 206, 235, 0.5); }
+        }
+
+        /* برج صدام (برج بغداد) */
+        .baghdad-tower {
+            position: fixed;
+            right: 20%;
+            bottom: 70px;
+            width: 80px;
+            height: 450px;
+            z-index: -6;
+            pointer-events: none;
+            animation: towerSway 25s ease-in-out infinite;
+        }
+
+        /* قاعدة البرج العريضة */
+        .tower-base {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 100px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 30%, #2c3e50 70%, #1a252f 100%);
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 12px 24px rgba(0,0,0,0.5);
+            clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%);
+        }
+
+        /* الجزء السفلي من البرج */
+        .tower-lower {
+            position: absolute;
+            bottom: 100px;
+            left: 10px;
+            width: 60px;
+            height: 120px;
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 50%, #34495e 100%);
+            border-radius: 6px;
+            box-shadow: 
+                0 8px 16px rgba(0,0,0,0.3),
+                inset 0 2px 4px rgba(255,255,255,0.1);
+        }
+
+        /* جسم البرج الأسطواني الرئيسي */
+        .tower-body {
+            position: absolute;
+            bottom: 220px;
+            left: 20px;
+            width: 40px;
+            height: 180px;
+            background: linear-gradient(135deg, #ecf0f1 0%, #bdc3c7 30%, #95a5a6 70%, #7f8c8d 100%);
+            border-radius: 20px;
+            box-shadow: 
+                0 16px 32px rgba(0,0,0,0.4),
+                inset 0 4px 8px rgba(255,255,255,0.2),
+                inset 0 -4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* مقسمات البرج */
+        .tower-section {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            box-shadow: 0 0 8px rgba(231, 76, 60, 0.5);
+        }
+
+        .tower-section:nth-child(1) { top: 50px; }
+        .tower-section:nth-child(2) { top: 100px; }
+        .tower-section:nth-child(3) { top: 150px; }
+        .tower-section:nth-child(4) { top: 200px; }
+
+        /* القمة المخروطية للبرج */
+        .tower-top {
+            position: absolute;
+            bottom: 400px;
+            left: 25px;
+            width: 30px;
+            height: 50px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 50%, #a93226 100%);
+            border-radius: 50% 50% 50% 50% / 80% 80% 20% 20%;
+            box-shadow: 
+                0 8px 16px rgba(0,0,0,0.4),
+                0 0 25px rgba(231, 76, 60, 0.5);
+            animation: topGlow 10s ease-in-out infinite;
+            clip-path: polygon(20% 100%, 80% 100%, 50% 0%);
+        }
+
+        /* منصة المراقبة */
+        .observation-deck {
+            position: absolute;
+            bottom: 380px;
+            left: 18px;
+            width: 44px;
+            height: 20px;
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        /* هوائي البرج */
+        .tower-antenna {
+            position: absolute;
+            bottom: 450px;
+            left: 38px;
+            width: 4px;
+            height: 40px;
+            background: linear-gradient(to top, #7f8c8d, #ecf0f1);
+            border-radius: 2px;
+            animation: antennaFlash 8s ease-in-out infinite;
+        }
+
+        .antenna-light {
+            position: absolute;
+            top: -6px;
+            left: -2px;
+            width: 8px;
+            height: 8px;
+            background: #e74c3c;
+            border-radius: 50%;
+            animation: antennaLightBlink 2s ease-in-out infinite;
+            box-shadow: 0 0 12px #e74c3c;
+        }
+
+        /* نوافذ البرج */
+        .tower-windows {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .tower-window {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #f1c40f;
+            border-radius: 2px;
+            animation: towerWindowBlink 4s ease-in-out infinite;
+        }
+
+        /* توزيع النوافذ */
+        .tower-window:nth-child(1) { top: 40px; left: 6px; animation-delay: 0s; }
+        .tower-window:nth-child(2) { top: 40px; right: 6px; animation-delay: 0.5s; }
+        .tower-window:nth-child(3) { top: 80px; left: 6px; animation-delay: 1s; }
+        .tower-window:nth-child(4) { top: 80px; right: 6px; animation-delay: 1.5s; }
+        .tower-window:nth-child(5) { top: 120px; left: 6px; animation-delay: 2s; }
+        .tower-window:nth-child(6) { top: 120px; right: 6px; animation-delay: 2.5s; }
+        .tower-window:nth-child(7) { top: 160px; left: 6px; animation-delay: 3s; }
+        .tower-window:nth-child(8) { top: 160px; right: 6px; animation-delay: 3.5s; }
+        .tower-window:nth-child(9) { top: 200px; left: 6px; animation-delay: 1s; }
+        .tower-window:nth-child(10) { top: 200px; right: 6px; animation-delay: 2s; }
+
+        /* إضاءة جانبية للبرج */
+        .tower-side-light {
+            position: absolute;
+            width: 2px;
+            height: 200px;
+            background: linear-gradient(to top, 
+                transparent 0%, 
+                rgba(52, 152, 219, 0.4) 20%, 
+                rgba(52, 152, 219, 0.6) 50%, 
+                rgba(52, 152, 219, 0.4) 80%, 
+                transparent 100%);
+            animation: sideLightSweep 10s ease-in-out infinite;
+        }
+
+        .tower-side-light.left { left: 0; }
+        .tower-side-light.right { right: 0; animation-delay: 5s; }
+
+        /* حركات البرج */
+        @keyframes towerSway {
+            0%, 100% { 
+                transform: rotate(0deg) scale(1);
+                filter: brightness(1);
+            }
+            25% { 
+                transform: rotate(0.5deg) scale(1.01);
+                filter: brightness(1.1);
+            }
+            50% { 
+                transform: rotate(0deg) scale(1.02);
+                filter: brightness(1.2);
+            }
+            75% { 
+                transform: rotate(-0.5deg) scale(1.01);
+                filter: brightness(1.1);
+            }
+        }
+
+        @keyframes topGlow {
+            0%, 100% { 
+                box-shadow: 0 8px 16px rgba(0,0,0,0.3), 0 0 20px rgba(243, 156, 18, 0.4);
+            }
+            50% { 
+                box-shadow: 0 12px 24px rgba(0,0,0,0.4), 0 0 40px rgba(243, 156, 18, 0.8);
+            }
+        }
+
+        @keyframes antennaFlash {
+            0%, 90% { opacity: 1; }
+            91%, 95% { opacity: 0.3; }
+            96%, 100% { opacity: 1; }
+        }
+
+        @keyframes antennaLightBlink {
+            0%, 50% { 
+                opacity: 1; 
+                box-shadow: 0 0 12px #e74c3c;
+            }
+            51%, 100% { 
+                opacity: 0.3; 
+                box-shadow: 0 0 6px #e74c3c;
+            }
+        }
+
+        @keyframes towerWindowBlink {
+            0%, 80% { 
+                opacity: 0.4; 
+                box-shadow: none;
+            }
+            81%, 90% { 
+                opacity: 1; 
+                box-shadow: 0 0 8px #f1c40f;
+            }
+            91%, 100% { 
+                opacity: 0.4; 
+                box-shadow: none;
+            }
+        }
+
+        @keyframes sideLightSweep {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        /* برج إيفل (فرنسا) */
+        .eiffel-tower {
+            position: fixed;
+            left: 70%;
+            bottom: 70px;
+            width: 50px;
+            height: 380px;
+            z-index: -5;
+            pointer-events: none;
+            animation: eiffelSway 22s ease-in-out infinite;
+        }
+
+        .eiffel-base {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 50px;
+            background: linear-gradient(135deg, #8b4513, #654321);
+            clip-path: polygon(15% 100%, 85% 100%, 50% 0%);
+        }
+
+        .eiffel-middle {
+            position: absolute;
+            bottom: 50px;
+            left: 8px;
+            width: 24px;
+            height: 150px;
+            background: linear-gradient(135deg, #8b4513, #654321);
+            clip-path: polygon(20% 100%, 80% 100%, 50% 0%);
+        }
+
+        .eiffel-top {
+            position: absolute;
+            bottom: 200px;
+            left: 15px;
+            width: 10px;
+            height: 150px;
+            background: linear-gradient(135deg, #8b4513, #654321);
+            border-radius: 2px;
+        }
+
+        .eiffel-light {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #ffd700;
+            border-radius: 50%;
+            animation: eiffelLightBlink 3s ease-in-out infinite;
+        }
+
+        @keyframes eiffelSway {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(1deg); }
+        }
+
+        @keyframes eiffelLightBlink {
+            0%, 70% { opacity: 0.3; }
+            71%, 100% { opacity: 1; }
+        }
+
+        /* برج خليفة (الإمارات) */
+        .burj-khalifa {
+            position: fixed;
+            right: 8%;
+            bottom: 70px;
+            width: 35px;
+            height: 480px;
+            z-index: -7;
+            pointer-events: none;
+            animation: burjSway 30s ease-in-out infinite;
+        }
+
+        .burj-base {
+            position: absolute;
+            bottom: 0;
+            left: 5px;
+            width: 25px;
+            height: 120px;
+            background: linear-gradient(135deg, #c0c0c0, #808080);
+            border-radius: 4px;
+        }
+
+        .burj-middle {
+            position: absolute;
+            bottom: 120px;
+            left: 8px;
+            width: 19px;
+            height: 200px;
+            background: linear-gradient(135deg, #e8e8e8, #c0c0c0);
+            border-radius: 3px;
+        }
+
+        .burj-upper {
+            position: absolute;
+            bottom: 320px;
+            left: 12px;
+            width: 11px;
+            height: 120px;
+            background: linear-gradient(135deg, #f5f5f5, #e8e8e8);
+            border-radius: 2px;
+        }
+
+        .burj-spire {
+            position: absolute;
+            bottom: 440px;
+            left: 16px;
+            width: 3px;
+            height: 40px;
+            background: linear-gradient(to top, #d4af37, #ffd700);
+            border-radius: 2px;
+        }
+
+        @keyframes burjSway {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            33% { transform: rotate(0.3deg) scale(1.01); }
+            66% { transform: rotate(-0.3deg) scale(1.01); }
+        }
+
+        /* برج CN (كندا) */
+        .cn-tower {
+            position: fixed;
+            left: 35%;
+            bottom: 70px;
+            width: 25px;
+            height: 420px;
+            z-index: -7;
+            pointer-events: none;
+            animation: cnSway 25s ease-in-out infinite;
+        }
+
+        .cn-base {
+            position: absolute;
+            bottom: 0;
+            left: 8px;
+            width: 9px;
+            height: 300px;
+            background: linear-gradient(135deg, #d3d3d3, #a9a9a9);
+            border-radius: 4px;
+        }
+
+        .cn-sphere {
+            position: absolute;
+            bottom: 280px;
+            left: 5px;
+            width: 15px;
+            height: 15px;
+            background: radial-gradient(circle, #ff6b6b, #ee5a52);
+            border-radius: 50%;
+            animation: cnSphereGlow 6s ease-in-out infinite;
+        }
+
+        .cn-spire-top {
+            position: absolute;
+            bottom: 295px;
+            left: 11px;
+            width: 3px;
+            height: 125px;
+            background: linear-gradient(to top, #a9a9a9, #d3d3d3);
+            border-radius: 2px;
+        }
+
+        @keyframes cnSway {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(0.8deg); }
+        }
+
+        @keyframes cnSphereGlow {
+            0%, 100% { box-shadow: 0 0 10px #ff6b6b; }
+            50% { box-shadow: 0 0 20px #ff6b6b, 0 0 30px #ee5a52; }
+        }
+
+        /* برج طوكيو (اليابان) */
+        .tokyo-tower {
+            position: fixed;
+            right: 45%;
+            bottom: 70px;
+            width: 30px;
+            height: 380px;
+            z-index: -7;
+            pointer-events: none;
+            animation: tokyoSway 18s ease-in-out infinite;
+        }
+
+        .tokyo-base {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 30px;
+            height: 40px;
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            clip-path: polygon(20% 100%, 80% 100%, 50% 0%);
+        }
+
+        .tokyo-body {
+            position: absolute;
+            bottom: 40px;
+            left: 8px;
+            width: 14px;
+            height: 280px;
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            clip-path: polygon(25% 100%, 75% 100%, 50% 0%);
+        }
+
+        .tokyo-antenna {
+            position: absolute;
+            bottom: 320px;
+            left: 14px;
+            width: 2px;
+            height: 60px;
+            background: linear-gradient(to top, #ff4444, #ffffff);
+            border-radius: 1px;
+        }
+
+        .tokyo-stripes {
+            position: absolute;
+            width: 100%;
+            height: 6px;
+            background: #ffffff;
+        }
+
+        .tokyo-stripes:nth-child(1) { bottom: 80px; }
+        .tokyo-stripes:nth-child(2) { bottom: 160px; }
+        .tokyo-stripes:nth-child(3) { bottom: 240px; }
+
+        @keyframes tokyoSway {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(0.5deg); }
+            75% { transform: rotate(-0.5deg); }
+        }
+
+        /* تمثال الحرية (أمريكا) */
+        .liberty-statue {
+            position: fixed;
+            left: 60%;
+            bottom: 70px;
+            width: 20px;
+            height: 300px;
+            z-index: -7;
+            pointer-events: none;
+            animation: libertySway 35s ease-in-out infinite;
+        }
+
+        .liberty-base {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 20px;
+            height: 60px;
+            background: linear-gradient(135deg, #8b7355, #5d4e37);
+            border-radius: 0 0 4px 4px;
+        }
+
+        .liberty-body {
+            position: absolute;
+            bottom: 60px;
+            left: 3px;
+            width: 14px;
+            height: 180px;
+            background: linear-gradient(135deg, #b87333, #8fbc8f);
+            border-radius: 2px;
+        }
+
+        .liberty-head {
+            position: absolute;
+            bottom: 240px;
+            left: 6px;
+            width: 8px;
+            height: 20px;
+            background: linear-gradient(135deg, #b87333, #8fbc8f);
+            border-radius: 50% 50% 30% 30%;
+        }
+
+        .liberty-crown {
+            position: absolute;
+            bottom: 260px;
+            left: 4px;
+            width: 12px;
+            height: 15px;
+            background: linear-gradient(135deg, #ffd700, #daa520);
+            clip-path: polygon(0% 100%, 20% 0%, 40% 100%, 60% 0%, 80% 100%, 100% 0%, 100% 100%);
+        }
+
+        .liberty-torch {
+            position: absolute;
+            bottom: 255px;
+            left: 16px;
+            width: 4px;
+            height: 25px;
+            background: linear-gradient(to top, #8fbc8f, #ffd700);
+            border-radius: 1px;
+        }
+
+        @keyframes libertySway {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(0.3deg); }
+        }
+
+        /* مصافي النفط */
+        .oil-refinery {
+            position: fixed;
+            left: 80%;
+            bottom: 70px;
+            width: 120px;
+            height: 200px;
+            z-index: -8;
+            pointer-events: none;
+            animation: refinerySway 40s ease-in-out infinite;
+        }
+
+        .refinery-tank {
+            position: absolute;
+            background: linear-gradient(135deg, #7f8c8d, #95a5a6, #34495e);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .tank-1 {
+            width: 25px; height: 80px; bottom: 0; left: 0;
+        }
+        .tank-2 {
+            width: 30px; height: 100px; bottom: 0; left: 30px;
+        }
+        .tank-3 {
+            width: 20px; height: 60px; bottom: 0; left: 65px;
+        }
+        .tank-4 {
+            width: 25px; height: 90px; bottom: 0; left: 90px;
+        }
+
+        .smoke-stack {
+            position: absolute;
+            width: 8px;
+            height: 120px;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .stack-1 { bottom: 80px; left: 10px; }
+        .stack-2 { bottom: 100px; left: 40px; }
+        .stack-3 { bottom: 90px; left: 95px; }
+
+        .refinery-smoke {
+            position: absolute;
+            width: 15px;
+            height: 40px;
+            background: radial-gradient(ellipse, rgba(169, 169, 169, 0.6) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: smokeRise linear infinite;
+        }
+
+        .smoke-1 {
+            bottom: 200px; left: 7px;
+            animation-duration: 8s; animation-delay: 0s;
+        }
+        .smoke-2 {
+            bottom: 220px; left: 37px;
+            animation-duration: 10s; animation-delay: 2s;
+        }
+        .smoke-3 {
+            bottom: 210px; left: 92px;
+            animation-duration: 9s; animation-delay: 4s;
+        }
+
+        @keyframes smokeRise {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 0.7;
+            }
+            50% {
+                transform: translateY(-50px) scale(1.5);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-100px) scale(2);
+                opacity: 0;
+            }
+        }
+
+        @keyframes refinerySway {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(0.2deg); }
+        }
+
+        /* غيوم ليلية */
+        .night-clouds {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60%;
+            z-index: -5;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .night-cloud {
+            position: absolute;
+            background: radial-gradient(ellipse, rgba(44, 62, 80, 0.3) 0%, rgba(52, 73, 94, 0.2) 40%, transparent 70%);
+            border-radius: 50%;
+            animation: nightCloudMove linear infinite;
+        }
+
+        .night-cloud:nth-child(1) {
+            width: 150px; height: 80px; top: 15%;
+            animation-duration: 120s; animation-delay: 0s;
+        }
+        .night-cloud:nth-child(2) {
+            width: 200px; height: 100px; top: 25%;
+            animation-duration: 150s; animation-delay: 20s;
+        }
+        .night-cloud:nth-child(3) {
+            width: 120px; height: 60px; top: 10%;
+            animation-duration: 100s; animation-delay: 40s;
+        }
+        .night-cloud:nth-child(4) {
+            width: 180px; height: 90px; top: 35%;
+            animation-duration: 130s; animation-delay: 60s;
+        }
+
+        @keyframes nightCloudMove {
+            0% { transform: translateX(-200px); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateX(calc(100vw + 200px)); opacity: 0; }
+        }
+
+        /* المنارة البحرية */
+        .lighthouse {
+            position: fixed;
+            right: 3%;
+            bottom: 70px;
+            width: 40px;
+            height: 250px;
+            z-index: -6;
+            pointer-events: none;
+            animation: lighthouseSway 30s ease-in-out infinite;
+        }
+
+        .lighthouse-base {
+            position: absolute;
+            bottom: 0;
+            left: 5px;
+            width: 30px;
+            height: 40px;
+            background: linear-gradient(135deg, #8b7355, #5d4e37);
+            border-radius: 0 0 6px 6px;
+        }
+
+        .lighthouse-body {
+            position: absolute;
+            bottom: 40px;
+            left: 10px;
+            width: 20px;
+            height: 160px;
+            background: 
+                linear-gradient(135deg, #ffffff 0%, #f8f9fa 30%, #e9ecef 70%, #dee2e6 100%),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent 0px,
+                    transparent 15px,
+                    #e74c3c 15px,
+                    #e74c3c 20px
+                );
+            border-radius: 4px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+
+        .lighthouse-top {
+            position: absolute;
+            bottom: 200px;
+            left: 8px;
+            width: 24px;
+            height: 30px;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            border-radius: 50% 50% 8px 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .lighthouse-light {
+            position: absolute;
+            bottom: 215px;
+            left: 15px;
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle, #ffd700, #f39c12);
+            border-radius: 50%;
+            animation: lighthouseBeam 4s ease-in-out infinite;
+            box-shadow: 0 0 20px #ffd700;
+        }
+
+        .lighthouse-beam {
+            position: absolute;
+            bottom: 220px;
+            left: 0;
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(to right, 
+                rgba(255, 215, 0, 0.8) 0%, 
+                rgba(255, 215, 0, 0.4) 50%, 
+                transparent 100%);
+            transform-origin: 0 center;
+            animation: beamSweep 8s linear infinite;
+        }
+
+        @keyframes lighthouseBeam {
+            0%, 100% { 
+                opacity: 1;
+                box-shadow: 0 0 20px #ffd700;
+            }
+            50% { 
+                opacity: 0.3;
+                box-shadow: 0 0 10px #ffd700;
+            }
+        }
+
+        @keyframes beamSweep {
+            0% { transform: rotate(0deg); opacity: 0.8; }
+            25% { transform: rotate(90deg); opacity: 1; }
+            50% { transform: rotate(180deg); opacity: 0.8; }
+            75% { transform: rotate(270deg); opacity: 1; }
+            100% { transform: rotate(360deg); opacity: 0.8; }
+        }
+
+        @keyframes lighthouseSway {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(0.3deg); }
+            75% { transform: rotate(-0.3deg); }
+        }
+
+        /* المباني السكنية والعمارات */
+        .residential-building {
+            position: fixed;
+            bottom: 70px;
+            z-index: -7;
+            pointer-events: none;
+            animation: buildingSway 35s ease-in-out infinite;
+        }
+
+        .building-1 {
+            left: 15%; width: 60px; height: 180px;
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            border-radius: 4px 4px 0 0;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            animation-delay: 1s;
+        }
+
+        .building-2 {
+            left: 25%; width: 45px; height: 140px;
+            background: linear-gradient(135deg, #7f8c8d, #95a5a6);
+            border-radius: 4px 4px 0 0;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            animation-delay: 3s;
+        }
+
+        .building-3 {
+            left: 35%; width: 55px; height: 200px;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            border-radius: 4px 4px 0 0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            animation-delay: 2s;
+        }
+
+        .building-4 {
+            left: 45%; width: 40px; height: 120px;
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            border-radius: 4px 4px 0 0;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+            animation-delay: 4s;
+        }
+
+        .building-5 {
+            left: 55%; width: 50px; height: 160px;
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            border-radius: 4px 4px 0 0;
+            box-shadow: 0 7px 14px rgba(0,0,0,0.3);
+            animation-delay: 1.5s;
+        }
+
+        .building-6 {
+            left: 85%; width: 35px; height: 100px;
+            background: linear-gradient(135deg, #7f8c8d, #95a5a6);
+            border-radius: 4px 4px 0 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            animation-delay: 2.5s;
+        }
+
+        .building-7 {
+            left: 92%; width: 42px; height: 130px;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            border-radius: 4px 4px 0 0;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            animation-delay: 3.5s;
+        }
+
+        /* نوافذ المباني */
+        .building-window {
+            position: absolute;
+            width: 8px;
+            height: 10px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 1px;
+            animation: windowLight 15s ease-in-out infinite;
+        }
+
+        .building-1 .building-window:nth-child(1) { top: 20px; left: 10px; animation-delay: 0s; }
+        .building-1 .building-window:nth-child(2) { top: 20px; right: 10px; animation-delay: 2s; }
+        .building-1 .building-window:nth-child(3) { top: 50px; left: 10px; animation-delay: 4s; }
+        .building-1 .building-window:nth-child(4) { top: 50px; right: 10px; animation-delay: 1s; }
+        .building-1 .building-window:nth-child(5) { top: 80px; left: 10px; animation-delay: 3s; }
+        .building-1 .building-window:nth-child(6) { top: 80px; right: 10px; animation-delay: 5s; }
+        .building-1 .building-window:nth-child(7) { top: 110px; left: 10px; animation-delay: 2s; }
+        .building-1 .building-window:nth-child(8) { top: 110px; right: 10px; animation-delay: 4s; }
+
+        .building-2 .building-window:nth-child(1) { top: 15px; left: 8px; animation-delay: 1s; }
+        .building-2 .building-window:nth-child(2) { top: 15px; right: 8px; animation-delay: 3s; }
+        .building-2 .building-window:nth-child(3) { top: 40px; left: 8px; animation-delay: 0s; }
+        .building-2 .building-window:nth-child(4) { top: 40px; right: 8px; animation-delay: 4s; }
+        .building-2 .building-window:nth-child(5) { top: 65px; left: 8px; animation-delay: 2s; }
+        .building-2 .building-window:nth-child(6) { top: 65px; right: 8px; animation-delay: 1s; }
+
+        .building-3 .building-window:nth-child(1) { top: 25px; left: 12px; animation-delay: 2s; }
+        .building-3 .building-window:nth-child(2) { top: 25px; right: 12px; animation-delay: 0s; }
+        .building-3 .building-window:nth-child(3) { top: 55px; left: 12px; animation-delay: 4s; }
+        .building-3 .building-window:nth-child(4) { top: 55px; right: 12px; animation-delay: 1s; }
+        .building-3 .building-window:nth-child(5) { top: 85px; left: 12px; animation-delay: 3s; }
+        .building-3 .building-window:nth-child(6) { top: 85px; right: 12px; animation-delay: 5s; }
+        .building-3 .building-window:nth-child(7) { top: 115px; left: 12px; animation-delay: 1s; }
+        .building-3 .building-window:nth-child(8) { top: 115px; right: 12px; animation-delay: 2s; }
+
+        @keyframes windowLight {
+            0%, 20% { opacity: 0.3; }
+            50% { opacity: 1; }
+            80%, 100% { opacity: 0.3; }
+        }
+
+        @keyframes buildingSway {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(0.1deg); }
+            75% { transform: rotate(-0.1deg); }
+        }
+
+        /* بيوت صغيرة */
+        .small-house {
+            position: fixed;
+            bottom: 70px;
+            z-index: -8;
+            pointer-events: none;
+            animation: houseSway 40s ease-in-out infinite;
+        }
+
+        .house-1 {
+            left: 5%; width: 40px; height: 60px;
+            background: linear-gradient(135deg, #8b4513, #a0522d);
+            border-radius: 4px 4px 0 0;
+            animation-delay: 0s;
+        }
+
+        .house-2 {
+            left: 18%; width: 35px; height: 50px;
+            background: linear-gradient(135deg, #a0522d, #8b4513);
+            border-radius: 4px 4px 0 0;
+            animation-delay: 2s;
+        }
+
+        .house-3 {
+            left: 30%; width: 38px; height: 55px;
+            background: linear-gradient(135deg, #8b4513, #a0522d);
+            border-radius: 4px 4px 0 0;
+            animation-delay: 1s;
+        }
+
+        .house-4 {
+            left: 75%; width: 32px; height: 45px;
+            background: linear-gradient(135deg, #a0522d, #8b4513);
+            border-radius: 4px 4px 0 0;
+            animation-delay: 3s;
+        }
+
+        /* أسطح البيوت */
+        .house-roof {
+            position: absolute;
+            top: -15px;
+            left: -5px;
+            width: calc(100% + 10px);
+            height: 20px;
+            background: linear-gradient(135deg, #8b0000, #dc143c);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+
+        /* نوافذ البيوت */
+        .house-window {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: linear-gradient(135deg, #ffd700, #f39c12);
+            border-radius: 1px;
+            animation: houseWindowLight 20s ease-in-out infinite;
+        }
+
+        .house-1 .house-window:nth-child(2) { top: 20px; left: 8px; animation-delay: 0s; }
+        .house-1 .house-window:nth-child(3) { top: 20px; right: 8px; animation-delay: 5s; }
+        .house-1 .house-window:nth-child(4) { top: 35px; left: 15px; animation-delay: 2s; }
+
+        .house-2 .house-window:nth-child(2) { top: 18px; left: 6px; animation-delay: 3s; }
+        .house-2 .house-window:nth-child(3) { top: 18px; right: 6px; animation-delay: 1s; }
+
+        .house-3 .house-window:nth-child(2) { top: 20px; left: 7px; animation-delay: 4s; }
+        .house-3 .house-window:nth-child(3) { top: 20px; right: 7px; animation-delay: 0s; }
+        .house-3 .house-window:nth-child(4) { top: 35px; left: 15px; animation-delay: 6s; }
+
+        .house-4 .house-window:nth-child(2) { top: 15px; left: 6px; animation-delay: 2s; }
+        .house-4 .house-window:nth-child(3) { top: 15px; right: 6px; animation-delay: 7s; }
+
+        @keyframes houseWindowLight {
+            0%, 30% { opacity: 0.4; }
+            60% { opacity: 1; }
+            90%, 100% { opacity: 0.4; }
+        }
+
+        @keyframes houseSway {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(0.05deg); }
+        }
+
+        /* نصب الشهيد العراقي */
+        .martyrs-monument {
+            position: fixed;
+            left: 65%;
+            bottom: 70px;
+            width: 80px;
+            height: 300px;
+            z-index: -4;
+            pointer-events: none;
+            animation: monumentSway 45s ease-in-out infinite;
+        }
+
+        /* القاعدة الدائرية */
+        .monument-base {
+            position: absolute;
+            bottom: 0;
+            left: 15px;
+            width: 50px;
+            height: 20px;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            border-radius: 50%;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+        }
+
+        /* القبة المقسومة - النصف الأول */
+        .monument-dome-1 {
+            position: absolute;
+            bottom: 20px;
+            left: 10px;
+            width: 30px;
+            height: 180px;
+            background: linear-gradient(135deg, #1abc9c, #16a085, #0f7864);
+            border-radius: 15px 0 0 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            animation: domeGlow1 8s ease-in-out infinite;
+        }
+
+        /* القبة المقسومة - النصف الثاني */
+        .monument-dome-2 {
+            position: absolute;
+            bottom: 20px;
+            right: 10px;
+            width: 30px;
+            height: 180px;
+            background: linear-gradient(135deg, #1abc9c, #16a085, #0f7864);
+            border-radius: 0 15px 15px 0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            animation: domeGlow2 8s ease-in-out infinite 2s;
+        }
+
+        /* الشعلة الأبدية */
+        .eternal-flame {
+            position: absolute;
+            bottom: 200px;
+            left: 35px;
+            width: 10px;
+            height: 40px;
+            background: radial-gradient(ellipse, #e74c3c 0%, #f39c12 30%, #ffd700 60%, transparent 80%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: flameFlicker 3s ease-in-out infinite;
+            filter: blur(1px);
+        }
+
+        /* النار المتحركة */
+        .flame-particle {
+            position: absolute;
+            bottom: 210px;
+            left: 37px;
+            width: 6px;
+            height: 15px;
+            background: radial-gradient(ellipse, #ff6b6b, #feca57);
+            border-radius: 50%;
+            animation: flameRise linear infinite;
+        }
+
+        .flame-1 { animation-duration: 2s; animation-delay: 0s; }
+        .flame-2 { animation-duration: 2.5s; animation-delay: 0.5s; left: 35px; }
+        .flame-3 { animation-duration: 1.8s; animation-delay: 1s; left: 39px; }
+
+        /* الإضاءة الداخلية للنصب */
+        .monument-light {
+            position: absolute;
+            bottom: 100px;
+            left: 25px;
+            width: 30px;
+            height: 80px;
+            background: linear-gradient(to top, 
+                rgba(255, 215, 0, 0.1) 0%, 
+                rgba(255, 215, 0, 0.3) 50%, 
+                rgba(255, 215, 0, 0.1) 100%);
+            border-radius: 50%;
+            animation: monumentIllumination 6s ease-in-out infinite;
+        }
+
+        /* النقوش والتفاصيل */
+        .monument-detail {
+            position: absolute;
+            background: linear-gradient(135deg, #0f7864, #1abc9c);
+            border-radius: 1px;
+        }
+
+        .detail-1 { bottom: 50px; left: 15px; width: 2px; height: 40px; }
+        .detail-2 { bottom: 50px; right: 15px; width: 2px; height: 40px; }
+        .detail-3 { bottom: 120px; left: 20px; width: 2px; height: 30px; }
+        .detail-4 { bottom: 120px; right: 20px; width: 2px; height: 30px; }
+
+        @keyframes flameFlicker {
+            0%, 100% { 
+                transform: scale(1) rotate(-2deg);
+                opacity: 0.9;
+            }
+            25% { 
+                transform: scale(1.1) rotate(1deg);
+                opacity: 1;
+            }
+            50% { 
+                transform: scale(0.95) rotate(-1deg);
+                opacity: 0.8;
+            }
+            75% { 
+                transform: scale(1.05) rotate(2deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes flameRise {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translateY(-20px) scale(1.2);
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-40px) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        @keyframes domeGlow1 {
+            0%, 100% { 
+                box-shadow: 
+                    0 10px 20px rgba(0,0,0,0.3),
+                    inset 0 0 20px rgba(26, 188, 156, 0.3);
+            }
+            50% { 
+                box-shadow: 
+                    0 15px 30px rgba(0,0,0,0.4),
+                    inset 0 0 30px rgba(26, 188, 156, 0.6);
+            }
+        }
+
+        @keyframes domeGlow2 {
+            0%, 100% { 
+                box-shadow: 
+                    0 10px 20px rgba(0,0,0,0.3),
+                    inset 0 0 20px rgba(26, 188, 156, 0.3);
+            }
+            50% { 
+                box-shadow: 
+                    0 15px 30px rgba(0,0,0,0.4),
+                    inset 0 0 30px rgba(26, 188, 156, 0.6);
+            }
+        }
+
+        @keyframes monumentIllumination {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes monumentSway {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(0.2deg); }
+            75% { transform: rotate(-0.2deg); }
+        }
+
+        /* مبنى Apple */
+        .apple-building {
+            position: fixed;
+            left: 88%;
+            bottom: 70px;
+            width: 65px;
+            height: 220px;
+            z-index: -6;
+            pointer-events: none;
+            animation: appleSway 50s ease-in-out infinite;
+        }
+
+        .apple-main {
+            position: absolute;
+            bottom: 0;
+            left: 5px;
+            width: 55px;
+            height: 180px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef, #dee2e6);
+            border-radius: 15px 15px 4px 4px;
+            box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+        }
+
+        .apple-logo {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 24px;
+            background: linear-gradient(135deg, #007aff, #5856d6);
+            border-radius: 8px 8px 0 8px;
+            clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%);
+            animation: appleGlow 6s ease-in-out infinite;
+        }
+
+        .apple-windows {
+            position: absolute;
+            width: 8px;
+            height: 12px;
+            background: linear-gradient(135deg, #ffd60a, #ffbe0b);
+            border-radius: 2px;
+            animation: appleWindowLight 20s ease-in-out infinite;
+        }
+
+        .apple-windows:nth-child(3) { top: 80px; left: 10px; animation-delay: 0s; }
+        .apple-windows:nth-child(4) { top: 80px; right: 10px; animation-delay: 3s; }
+        .apple-windows:nth-child(5) { top: 110px; left: 10px; animation-delay: 6s; }
+        .apple-windows:nth-child(6) { top: 110px; right: 10px; animation-delay: 9s; }
+        .apple-windows:nth-child(7) { top: 140px; left: 10px; animation-delay: 12s; }
+        .apple-windows:nth-child(8) { top: 140px; right: 10px; animation-delay: 15s; }
+
+        /* مبنى BMW */
+        .bmw-building {
+            position: fixed;
+            left: 8%;
+            bottom: 70px;
+            width: 50px;
+            height: 160px;
+            z-index: -6;
+            pointer-events: none;
+            animation: bmwSway 45s ease-in-out infinite;
+        }
+
+        .bmw-main {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 140px;
+            background: linear-gradient(135deg, #2c3e50, #34495e, #1e2a36);
+            border-radius: 8px 8px 0 0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+
+        .bmw-logo {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: 
+                linear-gradient(45deg, #ffffff 0%, #ffffff 50%, #007aff 50%, #007aff 100%),
+                linear-gradient(-45deg, #007aff 0%, #007aff 50%, #ffffff 50%, #ffffff 100%);
+            border: 2px solid #2c3e50;
+            animation: bmwRotate 8s linear infinite;
+        }
+
+        .bmw-windows {
+            position: absolute;
+            width: 6px;
+            height: 8px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border-radius: 1px;
+            animation: bmwWindowLight 18s ease-in-out infinite;
+        }
+
+        .bmw-windows:nth-child(3) { top: 60px; left: 8px; animation-delay: 0s; }
+        .bmw-windows:nth-child(4) { top: 60px; right: 8px; animation-delay: 4s; }
+        .bmw-windows:nth-child(5) { top: 80px; left: 8px; animation-delay: 8s; }
+        .bmw-windows:nth-child(6) { top: 80px; right: 8px; animation-delay: 12s; }
+        .bmw-windows:nth-child(7) { top: 100px; left: 8px; animation-delay: 2s; }
+        .bmw-windows:nth-child(8) { top: 100px; right: 8px; animation-delay: 6s; }
+
+        /* مبنى مرسيدس */
+        .mercedes-building {
+            position: fixed;
+            left: 78%;
+            bottom: 70px;
+            width: 55px;
+            height: 190px;
+            z-index: -6;
+            pointer-events: none;
+            animation: mercedesSway 40s ease-in-out infinite;
+        }
+
+        .mercedes-main {
+            position: absolute;
+            bottom: 0;
+            left: 2px;
+            width: 51px;
+            height: 170px;
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d, #5d6d7e);
+            border-radius: 6px 6px 0 0;
+            box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+        }
+
+        .mercedes-logo {
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #c0c0c0, #silver);
+            border: 2px solid #2c3e50;
+            animation: mercedesGlow 10s ease-in-out infinite;
+        }
+
+        .mercedes-star {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px;
+            height: 12px;
+            background: #2c3e50;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+
+        .mercedes-windows {
+            position: absolute;
+            width: 7px;
+            height: 10px;
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            border-radius: 1px;
+            animation: mercedesWindowLight 16s ease-in-out infinite;
+        }
+
+        .mercedes-windows:nth-child(4) { top: 60px; left: 9px; animation-delay: 0s; }
+        .mercedes-windows:nth-child(5) { top: 60px; right: 9px; animation-delay: 4s; }
+        .mercedes-windows:nth-child(6) { top: 85px; left: 9px; animation-delay: 8s; }
+        .mercedes-windows:nth-child(7) { top: 85px; right: 9px; animation-delay: 12s; }
+        .mercedes-windows:nth-child(8) { top: 110px; left: 9px; animation-delay: 2s; }
+        .mercedes-windows:nth-child(9) { top: 110px; right: 9px; animation-delay: 6s; }
+        .mercedes-windows:nth-child(10) { top: 135px; left: 9px; animation-delay: 10s; }
+        .mercedes-windows:nth-child(11) { top: 135px; right: 9px; animation-delay: 14s; }
+
+        @keyframes appleSway {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(0.3deg); }
+        }
+
+        @keyframes appleGlow {
+            0%, 100% { 
+                box-shadow: 0 0 10px rgba(0, 122, 255, 0.3);
+            }
+            50% { 
+                box-shadow: 0 0 20px rgba(0, 122, 255, 0.7);
+            }
+        }
+
+        @keyframes appleWindowLight {
+            0%, 40% { opacity: 0.3; }
+            70% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+
+        @keyframes bmwSway {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(0.2deg); }
+        }
+
+        @keyframes bmwRotate {
+            0% { transform: translateX(-50%) rotate(0deg); }
+            100% { transform: translateX(-50%) rotate(360deg); }
+        }
+
+        @keyframes bmwWindowLight {
+            0%, 30% { opacity: 0.4; }
+            60% { opacity: 1; }
+            100% { opacity: 0.4; }
+        }
+
+        @keyframes mercedesSway {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(0.25deg); }
+        }
+
+        @keyframes mercedesGlow {
+            0%, 100% { 
+                box-shadow: 0 0 8px rgba(192, 192, 192, 0.4);
+            }
+            50% { 
+                box-shadow: 0 0 16px rgba(192, 192, 192, 0.8);
+            }
+        }
+
+        @keyframes mercedesWindowLight {
+            0%, 35% { opacity: 0.3; }
+            65% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+
+        /* متحف المستقبل (دبي) */
+        .museum-future {
+            position: fixed;
+            left: 60%;
+            bottom: 70px;
+            width: 50px;
+            height: 240px;
+            z-index: -4;
+            pointer-events: none;
+            animation: museumSway 55s ease-in-out infinite;
+        }
+
+        .museum-oval {
+            position: absolute;
+            bottom: 40px;
+            left: 5px;
+            width: 40px;
+            height: 160px;
+            background: linear-gradient(135deg, #c0392b, #e74c3c, #f39c12);
+            border-radius: 50%;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+            animation: museumGlow 12s ease-in-out infinite;
+        }
+
+        .museum-hole {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 80px;
+            background: rgba(0,0,0,0.8);
+            border-radius: 50%;
+            animation: holeGlow 8s ease-in-out infinite;
+        }
+
+        .museum-base {
+            position: absolute;
+            bottom: 0;
+            left: 8px;
+            width: 34px;
+            height: 50px;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            border-radius: 0 0 8px 8px;
+        }
+
+        /* برج العرب (دبي) */
+        .burj-al-arab {
+            position: fixed;
+            left: 50%;
+            bottom: 70px;
+            width: 45px;
+            height: 280px;
+            z-index: -4;
+            pointer-events: none;
+            animation: burjSway 48s ease-in-out infinite;
+        }
+
+        .arab-sail {
+            position: absolute;
+            bottom: 30px;
+            left: 5px;
+            width: 35px;
+            height: 220px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef, #007aff);
+            clip-path: polygon(0% 100%, 100% 100%, 70% 0%);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            animation: sailGlow 10s ease-in-out infinite;
+        }
+
+        .arab-helipad {
+            position: absolute;
+            top: 20px;
+            right: 2px;
+            width: 15px;
+            height: 8px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 50%;
+            animation: helipadLight 6s ease-in-out infinite;
+        }
+
+        .arab-base {
+            position: absolute;
+            bottom: 0;
+            left: 10px;
+            width: 25px;
+            height: 40px;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            border-radius: 0 0 6px 6px;
+        }
+
+        /* برج بيزا المائل */
+        .leaning-tower {
+            position: fixed;
+            left: 40%;
+            bottom: 70px;
+            width: 30px;
+            height: 200px;
+            z-index: -5;
+            pointer-events: none;
+            animation: towerLean 35s ease-in-out infinite;
+            transform: rotate(4deg);
+        }
+
+        .pisa-body {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 30px;
+            height: 180px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef, #ced4da);
+            border-radius: 15px 15px 6px 6px;
+            box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+        }
+
+        .pisa-level {
+            position: absolute;
+            left: 2px;
+            right: 2px;
+            height: 20px;
+            border: 1px solid #adb5bd;
+            border-radius: 13px;
+        }
+
+        .pisa-level:nth-child(1) { bottom: 20px; }
+        .pisa-level:nth-child(2) { bottom: 45px; }
+        .pisa-level:nth-child(3) { bottom: 70px; }
+        .pisa-level:nth-child(4) { bottom: 95px; }
+        .pisa-level:nth-child(5) { bottom: 120px; }
+        .pisa-level:nth-child(6) { bottom: 145px; }
+
+        .pisa-windows {
+            position: absolute;
+            width: 4px;
+            height: 6px;
+            background: linear-gradient(135deg, #ffd60a, #ffbe0b);
+            border-radius: 2px;
+            animation: pisaWindowLight 22s ease-in-out infinite;
+        }
+
+        .pisa-windows:nth-child(7) { top: 30px; left: 6px; animation-delay: 0s; }
+        .pisa-windows:nth-child(8) { top: 30px; right: 6px; animation-delay: 5s; }
+        .pisa-windows:nth-child(9) { top: 60px; left: 6px; animation-delay: 10s; }
+        .pisa-windows:nth-child(10) { top: 60px; right: 6px; animation-delay: 15s; }
+
+        @keyframes museumSway {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(0.4deg); }
+        }
+
+        @keyframes museumGlow {
+            0%, 100% { 
+                box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+            }
+            50% { 
+                box-shadow: 0 20px 40px rgba(231, 76, 60, 0.3);
+            }
+        }
+
+        @keyframes holeGlow {
+            0%, 100% { 
+                background: rgba(0,0,0,0.8);
+                box-shadow: inset 0 0 20px rgba(0, 122, 255, 0.3);
+            }
+            50% { 
+                background: rgba(0,0,0,0.6);
+                box-shadow: inset 0 0 30px rgba(0, 122, 255, 0.6);
+            }
+        }
+
+        @keyframes burjSway {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(0.3deg); }
+        }
+
+        @keyframes sailGlow {
+            0%, 100% { 
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            }
+            50% { 
+                box-shadow: 0 25px 50px rgba(0, 122, 255, 0.2);
+            }
+        }
+
+        @keyframes helipadLight {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes towerLean {
+            0%, 100% { transform: rotate(4deg); }
+            50% { transform: rotate(4.5deg); }
+        }
+
+        @keyframes pisaWindowLight {
+            0%, 45% { opacity: 0.3; }
+            75% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+
+
+        
+        /* تخصيص شريط التمرير */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* مؤثر المشهد الكمركي المتكامل - مكبر ومحسن */
+        .customs-scene {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            z-index: -1;
+            overflow: hidden;
+            background: linear-gradient(to top, #2c3e50 0%, rgba(44, 62, 80, 0.3) 70%, transparent 100%);
+        }
+
+        .customs-ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 70px;
+            background: linear-gradient(to bottom, #34495e 0%, #2c3e50 100%);
+            border-top: 4px solid #3498db;
+            box-shadow: 0 -5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .road-markings {
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            height: 3px;
+            background: repeating-linear-gradient(
+                to right,
+                #f1c40f 0px,
+                #f1c40f 15px,
+                transparent 15px,
+                transparent 30px
+            );
+            animation: markingsMove 4s linear infinite;
+        }
+
+        @keyframes markingsMove {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-30px); }
+        }
+
+        /* الرافعة الكمركية - مكبرة ومحسنة */
+        .customs-crane {
+            position: absolute;
+            right: 8%;
+            bottom: 70px;
+            width: 120px;
+            height: 100px;
+            animation: craneWork 6s ease-in-out infinite;
+            transform-origin: center bottom;
+        }
+
+        .crane-base {
+            width: 35px;
+            height: 60px;
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            position: absolute;
+            bottom: 0;
+            left: 42px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            animation: baseVibrate 3s ease-in-out infinite;
+        }
+
+        .crane-arm {
+            width: 90px;
+            height: 12px;
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            position: absolute;
+            bottom: 55px;
+            left: 15px;
+            border-radius: 4px;
+            transform-origin: 42px 6px;
+            animation: craneRotate 6s ease-in-out infinite;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+
+        .crane-hook {
+            width: 6px;
+            height: 25px;
+            background: #34495e;
+            position: absolute;
+            right: 8px;
+            top: 12px;
+            animation: hookMove 6s ease-in-out infinite;
+            border-radius: 3px;
+        }
+
+        .cargo-container {
+            width: 30px;
+            height: 18px;
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            position: absolute;
+            right: 65px;
+            bottom: 70px;
+            border-radius: 3px;
+            animation: cargoLift 6s ease-in-out infinite;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+
+        @keyframes craneWork {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.02) rotate(1deg); }
+            50% { transform: scale(1.05) rotate(-1deg); }
+            75% { transform: scale(1.02) rotate(0.5deg); }
+        }
+
+        @keyframes baseVibrate {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(1px); }
+            50% { transform: translateX(-1px); }
+            75% { transform: translateX(0.5px); }
+        }
+
+        @keyframes craneRotate {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            20% { transform: rotate(-8deg) scale(1.02); }
+            40% { transform: rotate(-20deg) scale(1.05); }
+            60% { transform: rotate(-25deg) scale(1.05); }
+            80% { transform: rotate(-12deg) scale(1.02); }
+        }
+
+        @keyframes hookMove {
+            0%, 100% { height: 25px; transform: scale(1); }
+            25% { height: 35px; transform: scale(1.1); }
+            50% { height: 45px; transform: scale(1.2); }
+            75% { height: 35px; transform: scale(1.1); }
+        }
+
+        @keyframes cargoLift {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-15px) rotate(2deg); }
+            50% { transform: translateY(-35px) rotate(-2deg); }
+            75% { transform: translateY(-20px) rotate(1deg); }
+        }
+
+        /* رافعة Front Lift للمركبات */
+        .front-lift {
+            position: absolute;
+            left: 15%;
+            bottom: 70px;
+            width: 100px;
+            height: 80px;
+            animation: liftWork 10s ease-in-out infinite;
+        }
+
+        .lift-base {
+            width: 40px;
+            height: 15px;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            position: absolute;
+            bottom: 0;
+            left: 30px;
+            border-radius: 5px;
+        }
+
+        .lift-arm-vertical {
+            width: 8px;
+            height: 50px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            position: absolute;
+            bottom: 15px;
+            left: 46px;
+            border-radius: 3px;
+            animation: armExtend 10s ease-in-out infinite;
+            transform-origin: center bottom;
+        }
+
+        .lift-arm-horizontal {
+            width: 60px;
+            height: 6px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            position: absolute;
+            top: 0;
+            left: -26px;
+            border-radius: 3px;
+            animation: armRotate 10s ease-in-out infinite;
+        }
+
+        .lift-hook {
+            width: 8px;
+            height: 12px;
+            background: #34495e;
+            position: absolute;
+            right: 0;
+            top: 6px;
+            border-radius: 2px;
+        }
+
+        .car-on-lift {
+            width: 35px;
+            height: 15px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            position: absolute;
+            left: 35%;
+            bottom: 70px;
+            border-radius: 8px 8px 3px 3px;
+            animation: carLift 10s ease-in-out infinite;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .car-wheels {
+            width: 6px;
+            height: 6px;
+            background: #2c3e50;
+            border-radius: 50%;
+            position: absolute;
+            bottom: -3px;
+        }
+
+        .car-wheel-left { left: 5px; }
+        .car-wheel-right { right: 5px; }
+
+        .trailer-truck {
+            position: absolute;
+            right: 30%;
+            bottom: 70px;
+            width: 120px;
+            height: 35px;
+            animation: trailerMove 15s ease-in-out infinite;
+        }
+
+        .trailer-body {
+            width: 80px;
+            height: 25px;
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            border-radius: 5px;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+        }
+
+        .trailer-cabin {
+            width: 35px;
+            height: 25px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border-radius: 5px 0 0 5px;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        }
+
+        .trailer-wheel {
+            width: 10px;
+            height: 10px;
+            background: #2c3e50;
+            border-radius: 50%;
+            position: absolute;
+            bottom: -5px;
+            animation: wheelSpin 1s linear infinite;
+        }
+
+        .trailer-wheel-1 { left: 10px; }
+        .trailer-wheel-2 { left: 25px; }
+        .trailer-wheel-3 { right: 10px; }
+
+        /* موظفو الكمارك - محسنون */
+        .customs-officer {
+            position: absolute;
+            bottom: 70px;
+            width: 20px;
+            height: 35px;
+            animation: officerMove linear infinite;
+        }
+
+        .officer-body {
+            width: 8px;
+            height: 15px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border-radius: 4px 4px 2px 2px;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .officer-head {
+            width: 6px;
+            height: 6px;
+            background: #f4d03f;
+            border-radius: 50%;
+            position: absolute;
+            top: -7px;
+            left: 1px;
+        }
+
+        .officer-legs {
+            width: 3px;
+            height: 8px;
+            background: #2c3e50;
+            position: absolute;
+            bottom: -8px;
+            left: 2.5px;
+            border-radius: 0 0 2px 2px;
+        }
+
+        .customs-officer:nth-child(3) { 
+            animation-duration: 30s; 
+            left: 20%; 
+            animation-delay: 0s;
+        }
+
+        .customs-officer:nth-child(4) { 
+            animation-duration: 35s; 
+            left: 70%; 
+            animation-delay: 10s;
+            transform: scaleX(-1);
+        }
+
+        .customs-officer:nth-child(16) { 
+            animation-duration: 25s; 
+            left: 45%; 
+            animation-delay: 5s;
+        }
+
+        .customs-officer:nth-child(17) { 
+            animation-duration: 40s; 
+            left: 15%; 
+            animation-delay: 15s;
+            transform: scaleX(-1);
+        }
+
+        .customs-officer:nth-child(18) { 
+            animation-duration: 28s; 
+            left: 85%; 
+            animation-delay: 22s;
+        }
+
+        .customs-officer:nth-child(19) { 
+            animation-duration: 33s; 
+            left: 60%; 
+            animation-delay: 8s;
+            transform: scaleX(-1);
+        }
+
+        @keyframes officerMove {
+            0% { transform: translateX(0) scaleX(1); }
+            50% { transform: translateX(30px) scaleX(1); }
+            51% { transform: translateX(30px) scaleX(-1); }
+            100% { transform: translateX(0) scaleX(-1); }
+        }
+
+        /* الشاحنات المحسنة */
+        .customs-truck {
+            position: absolute;
+            bottom: 50px;
+            width: 70px;
+            height: 35px;
+            animation: truckMove linear infinite;
+        }
+
+        .truck-body {
+            width: 45px;
+            height: 25px;
+            background: linear-gradient(135deg, #4a90e2, #357abd);
+            border-radius: 5px;
+            position: relative;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+
+        .truck-cabin {
+            width: 25px;
+            height: 25px;
+            background: linear-gradient(135deg, #2c5aa0, #1e3a8a);
+            border-radius: 5px 0 0 5px;
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+        .truck-wheel {
+            width: 10px;
+            height: 10px;
+            background: #2c3e50;
+            border-radius: 50%;
+            position: absolute;
+            bottom: -5px;
+            border: 2px solid #34495e;
+            animation: wheelSpin 1s linear infinite;
+        }
+
+        .truck-wheel-1 { left: 8px; }
+        .truck-wheel-2 { right: 8px; }
+
+        @keyframes wheelSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .customs-truck:nth-child(5) { 
+            animation-duration: 25s; 
+            animation-delay: 0s; 
+        }
+
+        .customs-truck:nth-child(6) { 
+            animation-duration: 30s; 
+            animation-delay: 8s; 
+        }
+
+        .customs-truck:nth-child(6) .truck-body { 
+            background: linear-gradient(135deg, #e74c3c, #c0392b); 
+        }
+
+        .customs-truck:nth-child(6) .truck-cabin { 
+            background: linear-gradient(135deg, #a93226, #7b241c); 
+        }
+
+        @keyframes truckMove {
+            0% { right: -90px; }
+            100% { right: 100%; }
+        }
+
+        /* شاحنات إضافية للازدحام */
+        .extra-truck {
+            position: absolute;
+            bottom: 70px;
+            width: 85px;
+            height: 40px;
+            animation: extraTruckMove linear infinite;
+        }
+
+        .extra-truck:nth-child(12) {
+            animation-duration: 20s;
+            animation-delay: 3s;
+        }
+
+        .extra-truck:nth-child(13) {
+            animation-duration: 28s;
+            animation-delay: 12s;
+        }
+
+        .extra-truck:nth-child(14) {
+            animation-duration: 22s;
+            animation-delay: 18s;
+        }
+
+        .extra-truck:nth-child(15) {
+            animation-duration: 32s;
+            animation-delay: 25s;
+        }
+
+        .extra-truck-body {
+            width: 55px;
+            height: 28px;
+            border-radius: 6px;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .extra-truck:nth-child(12) .extra-truck-body {
+            background: linear-gradient(135deg, #8e44ad, #9b59b6);
+        }
+
+        .extra-truck:nth-child(13) .extra-truck-body {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .extra-truck:nth-child(14) .extra-truck-body {
+            background: linear-gradient(135deg, #1abc9c, #16a085);
+        }
+
+        .extra-truck:nth-child(15) .extra-truck-body {
+            background: linear-gradient(135deg, #e91e63, #ad1457);
+        }
+
+        .extra-truck-cabin {
+            width: 30px;
+            height: 28px;
+            border-radius: 6px 0 0 6px;
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+        .extra-truck:nth-child(12) .extra-truck-cabin {
+            background: linear-gradient(135deg, #6c3483, #7d3c98);
+        }
+
+        .extra-truck:nth-child(13) .extra-truck-cabin {
+            background: linear-gradient(135deg, #d68910, #b7950b);
+        }
+
+        .extra-truck:nth-child(14) .extra-truck-cabin {
+            background: linear-gradient(135deg, #138d75, #117a65);
+        }
+
+        .extra-truck:nth-child(15) .extra-truck-cabin {
+            background: linear-gradient(135deg, #c2185b, #880e4f);
+        }
+
+        @keyframes extraTruckMove {
+            0% { right: -100px; }
+            100% { right: 100%; }
+        }
+
+        /* البواخر */
+        .cargo-ship {
+            position: absolute;
+            top: 60px;
+            width: 100px;
+            height: 25px;
+            animation: shipMove linear infinite;
+        }
+
+        .ship-hull {
+            width: 80px;
+            height: 15px;
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            border-radius: 0 15px 15px 0;
+            position: relative;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+
+        .ship-deck {
+            width: 60px;
+            height: 8px;
+            background: linear-gradient(135deg, #7f8c8d, #95a5a6);
+            position: absolute;
+            top: -8px;
+            left: 10px;
+            border-radius: 2px;
+        }
+
+        .ship-container {
+            width: 12px;
+            height: 10px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            position: absolute;
+            top: -18px;
+            left: 15px;
+            border-radius: 2px;
+        }
+
+        .ship-container:nth-child(4) {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            left: 30px;
+        }
+
+        .ship-container:nth-child(5) {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            left: 45px;
+        }
+
+        .ship-mast {
+            width: 2px;
+            height: 20px;
+            background: #95a5a6;
+            position: absolute;
+            top: -28px;
+            left: 60px;
+        }
+
+        .cargo-ship:nth-child(8) {
+            animation-duration: 50s;
+            animation-delay: 0s;
+        }
+
+        .cargo-ship:nth-child(9) {
+            animation-duration: 60s;
+            animation-delay: 20s;
+        }
+
+        @keyframes shipMove {
+            0% { right: -120px; }
+            100% { right: 100%; }
+        }
+
+        /* أنيميشن رافعة Front Lift */
+        @keyframes liftWork {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes armExtend {
+            0%, 100% { transform: scaleY(1) rotate(0deg); }
+            25% { transform: scaleY(1.2) rotate(2deg); }
+            50% { transform: scaleY(1.4) rotate(-2deg); }
+            75% { transform: scaleY(1.2) rotate(1deg); }
+        }
+
+        @keyframes armRotate {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(15deg); }
+            50% { transform: rotate(35deg); }
+            75% { transform: rotate(20deg); }
+        }
+
+        @keyframes carLift {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-20px) translateX(10px); }
+            50% { transform: translateY(-40px) translateX(30px); }
+            75% { transform: translateY(-25px) translateX(20px); }
+        }
+
+        @keyframes trailerMove {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(-30px); }
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #764ba2, #002147);
+        }
+        
+        /* ضمان إمكانية التمرير السلس */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            scroll-behavior: smooth;
+        }
+        
+        .fullscreen-login {
+            scroll-behavior: smooth;
+        }
+        
+
+        
+        /* تأثير الخلفية المتحركة */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 33, 71, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            animation: backgroundMove 20s ease-in-out infinite;
+            z-index: -1;
+        }
+        
+        @keyframes backgroundMove {
+            0%, 100% { transform: translateX(0) translateY(0) rotate(0deg); }
+            25% { transform: translateX(-30px) translateY(-15px) rotate(2deg); }
+            50% { transform: translateX(30px) translateY(-25px) rotate(-2deg); }
+            75% { transform: translateX(-15px) translateY(15px) rotate(1deg); }
+        }
+        
+        @keyframes floatingParticles {
+            0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
+            33% { transform: translateY(-20px) scale(1.1) rotate(120deg); }
+            66% { transform: translateY(10px) scale(0.9) rotate(240deg); }
+        }
+        
+        .floating-particle {
+            position: absolute;
+            background: rgba(255, 215, 0, 0.6);
+            border-radius: 50%;
+            animation: floatingParticles 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+        
+        .particle-1 {
+            width: 8px;
+            height: 8px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .particle-2 {
+            width: 12px;
+            height: 12px;
+            top: 60%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+        
+        .particle-3 {
+            width: 6px;
+            height: 6px;
+            bottom: 30%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+        
+        .particle-4 {
+            width: 10px;
+            height: 10px;
+            top: 40%;
+            right: 30%;
+            animation-delay: 1s;
+        }
+        
+        .fullscreen-login {
+            width: 100vw;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            color: white;
+            z-index: 10;
+            padding: 20px;
+            box-sizing: border-box;
+            gap: 20px;
+            overflow-y: auto;
+        }
+        
+        @keyframes containerPulse {
+            0%, 100% { 
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2), 0 0 0 0 rgba(255, 215, 0, 0.3);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3), 0 0 30px 5px rgba(255, 215, 0, 0.1);
+                transform: scale(1.02);
+            }
+        }
+        
+        .fullscreen-login h1 {
+            font-size: clamp(24px, 4vw, 36px);
+            font-weight: 700;
+            margin: 10px 0;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+            line-height: 1.2;
+            max-width: 90%;
+        }
+        
+        .company-description {
+            font-size: clamp(14px, 2.5vw, 18px);
+            opacity: 0.9;
+            margin: 0;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+            line-height: 1.3;
+            max-width: 85%;
+        }
+        
+        .login-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+            animation: headerFloat 15s ease-in-out infinite;
+        }
+        
+        @keyframes headerFloat {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+        }
+        
+        .login-header h1 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+            color: white;
+            line-height: 1.3;
+        }
+        
+        .login-header p {
+            font-size: 20px;
+            opacity: 0.9;
+            margin: 0;
+            position: relative;
+            z-index: 2;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+            line-height: 1.4;
+            max-width: 80%;
+        }
+        
+        .company-logo {
+            width: clamp(120px, 15vw, 180px);
+            height: clamp(120px, 15vw, 180px);
+            margin-bottom: clamp(15px, 2vh, 25px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%),
+                linear-gradient(45deg, rgba(255, 215, 0, 0.1) 0%, rgba(102, 126, 234, 0.1) 100%);
+            border-radius: 50%;
+            backdrop-filter: blur(15px);
+            border: 4px solid;
+            border-image: linear-gradient(45deg, #ffd700, #667eea, #764ba2, #ffd700) 1;
+            animation: logoFloat 6s ease-in-out infinite;
+            position: relative;
+            z-index: 2;
+            box-shadow: 
+                0 0 40px rgba(255, 215, 0, 0.5),
+                0 0 80px rgba(102, 126, 234, 0.3),
+                inset 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+        
+        .company-logo img {
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+        
+        @keyframes logoFloat {
+            0%, 100% { 
+                transform: translateY(0) scale(1) rotate(0deg); 
+                box-shadow: 0 0 25px rgba(255, 215, 0, 0.3);
+            }
+            25% { 
+                transform: translateY(-8px) scale(1.02) rotate(2deg); 
+                box-shadow: 0 0 35px rgba(255, 215, 0, 0.5);
+            }
+            50% { 
+                transform: translateY(-15px) scale(1.05) rotate(0deg); 
+                box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+            }
+            75% { 
+                transform: translateY(-8px) scale(1.02) rotate(-2deg); 
+                box-shadow: 0 0 35px rgba(255, 215, 0, 0.5);
+            }
+        }
+        
+        .login-form-content {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: clamp(20px, 3vh, 30px) clamp(20px, 4vw, 30px);
+            max-width: 400px;
+            width: 90%;
+            margin-top: clamp(20px, 3vh, 30px);
+            position: relative;
+        }
+        
+        .form-group {
+            margin-bottom: clamp(15px, 2vh, 20px);
+            position: relative;
+        }
+        
+        .form-control {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: clamp(12px, 2vh, 18px) clamp(15px, 3vw, 20px);
+            font-size: clamp(14px, 2.5vw, 16px);
+            transition: all 0.4s ease;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            margin: 0 auto;
+            color: #002147;
+            position: relative;
+            animation: inputGlow 3s ease-in-out infinite;
+        }
+        
+        @keyframes inputGlow {
+            0%, 100% { 
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(102, 126, 234, 0);
+            }
+            50% { 
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15), 0 0 15px 2px rgba(102, 126, 234, 0.2);
+            }
+        }
+        
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 
+                0 0 0 0.3rem rgba(102, 126, 234, 0.15),
+                0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 1);
+        }
+        
+        .form-control:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .form-label {
+            font-weight: 700;
+            color: white;
+            margin-bottom: 12px;
+            font-size: 16px;
+            display: block;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        .login-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #002147 100%);
+            border: none;
+            border-radius: 12px;
+            padding: clamp(12px, 2.5vh, 16px) clamp(20px, 4vw, 30px);
+            font-size: clamp(14px, 2.5vw, 18px);
+            font-weight: 700;
+            width: 100%;
+            color: white;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            margin: clamp(15px, 2vh, 20px) 0 clamp(10px, 1vh, 15px);
+            display: block;
+            animation: buttonPulse 4s ease-in-out infinite;
+            cursor: pointer;
+        }
+        
+        @keyframes buttonPulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            }
+            50% { 
+                transform: scale(1.05);
+                box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
+            }
+        }
+        
+        .login-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+        
+        .login-btn:hover::before {
+            left: 100%;
+        }
+        
+        .login-btn:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+        
+        .alert {
+            border-radius: 15px;
+            border: none;
+            margin-bottom: 25px;
+            padding: 15px 20px;
+            backdrop-filter: blur(10px);
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+
+        
+        /* تأثيرات إضافية للتفاعل */
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .shape {
+            position: absolute;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 50%;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        .shape:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .shape:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            top: 70%;
+            right: 10%;
+            animation-delay: 5s;
+        }
+        
+        .shape:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            top: 30%;
+            right: 20%;
+            animation-delay: 10s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-20px) rotate(90deg); }
+            50% { transform: translateY(-40px) rotate(180deg); }
+            75% { transform: translateY(-20px) rotate(270deg); }
+        }
+        
+
+
+        /* إعدادات الهاتف المحمول */
+        @media (max-width: 768px) {
+            .fullscreen-login h1 {
+                font-size: 28px;
+                margin: 20px 0 15px;
+                max-width: 95%;
+            }
+            
+            .company-description {
+                font-size: 16px;
+                margin: 0 0 30px;
+                max-width: 90%;
+            }
+            
+            .login-form-content {
+                padding: 30px 20px;
+                margin-top: 30px;
+                width: 95%;
+            }
+            
+            .company-logo {
+                width: 150px;
+                height: 150px;
+                margin-bottom: 20px;
+            }
+            
+            .company-logo img {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .form-control {
+                padding: 16px 20px;
+                font-size: 16px;
+            }
+            
+            .login-btn {
+                padding: 16px 30px;
+                font-size: 16px;
+                margin: 25px 0 20px;
+            }
+            
+
+        }
+        
+        /* تحسينات لشاشات الكمبيوتر الكبيرة */
+        @media (min-width: 1200px) {
+            .fullscreen-login h1 {
+                font-size: 54px;
+                margin: 40px 0 25px;
+            }
+            
+            .company-description {
+                font-size: 28px;
+                margin: 0 0 60px;
+            }
+            
+            .company-logo {
+                width: 300px;
+                height: 300px;
+                margin-bottom: 50px;
+            }
+            
+            .company-logo img {
+                width: 240px;
+                height: 240px;
+            }
+            
+            .login-form-content {
+                max-width: 600px;
+                padding: 50px;
+                margin-top: 60px;
+            }
+            
+            .form-control {
+                padding: 24px 28px;
+                font-size: 20px;
+            }
+            
+            .login-btn {
+                padding: 24px 45px;
+                font-size: 24px;
+                margin: 35px 0 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- المؤثرات الخلفية الجمالية -->
+    <div class="light-waves"></div>
+    
+    <!-- النجوم المتلألئة -->
+    <div class="stars">
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+    </div>
+    
+    <!-- الغيوم المتحركة -->
+    <div class="clouds">
+        <div class="cloud"></div>
+        <div class="cloud"></div>
+        <div class="cloud"></div>
+    </div>
+    
+    <!-- أضواء المدينة -->
+    <div class="city-lights">
+        <div class="city-light"></div>
+        <div class="city-light"></div>
+        <div class="city-light"></div>
+        <div class="city-light"></div>
+        <div class="city-light"></div>
+        <div class="city-light"></div>
+        <div class="city-light"></div>
+        <div class="city-light"></div>
+        <div class="city-light"></div>
+        <div class="city-light"></div>
+    </div>
+    
+    <!-- الجسيمات الضوئية -->
+    <div class="light-particles">
+        <div class="light-particle"></div>
+        <div class="light-particle"></div>
+        <div class="light-particle"></div>
+        <div class="light-particle"></div>
+        <div class="light-particle"></div>
+        <div class="light-particle"></div>
+        <div class="light-particle"></div>
+        <div class="light-particle"></div>
+        <div class="light-particle"></div>
+    </div>
+    
+    <!-- الجسيمات المتحركة -->
+    <div class="floating-particle particle-1"></div>
+    <div class="floating-particle particle-2"></div>
+    <div class="floating-particle particle-3"></div>
+    <div class="floating-particle particle-4"></div>
+    
+    <!-- العناصر المتحركة في الخلفية -->
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    
+    <!-- المباني الكمركية -->
+    <div class="customs-buildings">
+        <div class="building building-1">
+            <div class="building-windows"></div>
+            <div class="building-windows"></div>
+            <div class="building-windows"></div>
+            <div class="building-windows"></div>
+        </div>
+        <div class="building building-2">
+            <div class="building-windows"></div>
+            <div class="building-windows"></div>
+            <div class="building-windows"></div>
+        </div>
+        <div class="building building-3">
+            <div class="building-windows"></div>
+            <div class="building-windows"></div>
+            <div class="building-windows"></div>
+        </div>
+    </div>
+    
+    <!-- البوابات الكمركية -->
+    <div class="customs-gates">
+        <div class="gate-post left"></div>
+        <div class="gate-post right"></div>
+        <div class="gate-barrier"></div>
+    </div>
+    
+    <!-- الإشارات المرورية -->
+    <div class="traffic-lights">
+        <div class="traffic-light red-light"></div>
+        <div class="traffic-light yellow-light"></div>
+        <div class="traffic-light green-light"></div>
+    </div>
+    
+    <!-- تأثيرات البخار -->
+    <div class="steam-effects">
+        <div class="steam"></div>
+        <div class="steam"></div>
+        <div class="steam"></div>
+    </div>
+    
+    <!-- أضواء الأرضية -->
+    <div class="floor-lights">
+        <div class="floor-light-beam"></div>
+        <div class="floor-light-beam"></div>
+        <div class="floor-light-beam"></div>
+        <div class="floor-light-beam"></div>
+    </div>
+    
+    <!-- القمر والضوء القمري -->
+    <div class="moon"></div>
+    
+    <!-- توهج القمر على الأرض -->
+    <div class="moonlight-ground"></div>
+    
+    <!-- أشعة الضوء القمري -->
+    <div class="moonlight-rays">
+        <div class="moonlight-ray"></div>
+        <div class="moonlight-ray"></div>
+        <div class="moonlight-ray"></div>
+        <div class="moonlight-ray"></div>
+        <div class="moonlight-ray"></div>
+    </div>
+    
+    <!-- غبار القمر المتلألئ -->
+    <div class="moon-dust">
+        <div class="dust-particle"></div>
+        <div class="dust-particle"></div>
+        <div class="dust-particle"></div>
+        <div class="dust-particle"></div>
+        <div class="dust-particle"></div>
+    </div>
+    
+    <!-- برج إيفل (فرنسا) -->
+    <div class="eiffel-tower">
+        <div class="eiffel-base"></div>
+        <div class="eiffel-middle"></div>
+        <div class="eiffel-top"></div>
+        <div class="eiffel-light" style="bottom: 100px; left: 18px; animation-delay: 0s;"></div>
+        <div class="eiffel-light" style="bottom: 180px; left: 18px; animation-delay: 1s;"></div>
+        <div class="eiffel-light" style="bottom: 260px; left: 18px; animation-delay: 2s;"></div>
+    </div>
+    
+    <!-- برج خليفة (الإمارات) -->
+    <div class="burj-khalifa">
+        <div class="burj-base"></div>
+        <div class="burj-middle"></div>
+        <div class="burj-upper"></div>
+        <div class="burj-spire"></div>
+    </div>
+    
+    <!-- برج CN (كندا) -->
+    <div class="cn-tower">
+        <div class="cn-base"></div>
+        <div class="cn-sphere"></div>
+        <div class="cn-spire-top"></div>
+    </div>
+    
+    <!-- برج طوكيو (اليابان) -->
+    <div class="tokyo-tower">
+        <div class="tokyo-base"></div>
+        <div class="tokyo-body">
+            <div class="tokyo-stripes"></div>
+            <div class="tokyo-stripes"></div>
+            <div class="tokyo-stripes"></div>
+        </div>
+        <div class="tokyo-antenna"></div>
+    </div>
+    
+    <!-- تمثال الحرية (أمريكا) -->
+    <div class="liberty-statue">
+        <div class="liberty-base"></div>
+        <div class="liberty-body"></div>
+        <div class="liberty-head"></div>
+        <div class="liberty-crown"></div>
+        <div class="liberty-torch"></div>
+    </div>
+    
+    <!-- مصافي النفط -->
+    <div class="oil-refinery">
+        <div class="refinery-tank tank-1"></div>
+        <div class="refinery-tank tank-2"></div>
+        <div class="refinery-tank tank-3"></div>
+        <div class="refinery-tank tank-4"></div>
+        <div class="smoke-stack stack-1"></div>
+        <div class="smoke-stack stack-2"></div>
+        <div class="smoke-stack stack-3"></div>
+        <div class="refinery-smoke smoke-1"></div>
+        <div class="refinery-smoke smoke-2"></div>
+        <div class="refinery-smoke smoke-3"></div>
+    </div>
+    
+    <!-- المنارة البحرية -->
+    <div class="lighthouse">
+        <div class="lighthouse-base"></div>
+        <div class="lighthouse-body"></div>
+        <div class="lighthouse-top"></div>
+        <div class="lighthouse-light"></div>
+        <div class="lighthouse-beam"></div>
+    </div>
+    
+    <!-- غيوم ليلية -->
+    <div class="night-clouds">
+        <div class="night-cloud"></div>
+        <div class="night-cloud"></div>
+        <div class="night-cloud"></div>
+        <div class="night-cloud"></div>
+    </div>
+    
+    <!-- البيوت الصغيرة -->
+    <div class="small-house house-1">
+        <div class="house-roof"></div>
+        <div class="house-window"></div>
+        <div class="house-window"></div>
+        <div class="house-window"></div>
+    </div>
+    
+    <div class="small-house house-2">
+        <div class="house-roof"></div>
+        <div class="house-window"></div>
+        <div class="house-window"></div>
+    </div>
+    
+    <div class="small-house house-3">
+        <div class="house-roof"></div>
+        <div class="house-window"></div>
+        <div class="house-window"></div>
+        <div class="house-window"></div>
+    </div>
+    
+    <div class="small-house house-4">
+        <div class="house-roof"></div>
+        <div class="house-window"></div>
+        <div class="house-window"></div>
+    </div>
+    
+    <!-- المباني السكنية -->
+    <div class="residential-building building-1">
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+    </div>
+    
+    <div class="residential-building building-2">
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+    </div>
+    
+    <div class="residential-building building-3">
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+    </div>
+    
+    <div class="residential-building building-4">
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+    </div>
+    
+    <div class="residential-building building-5">
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+    </div>
+    
+    <div class="residential-building building-6">
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+    </div>
+    
+    <div class="residential-building building-7">
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+        <div class="building-window"></div>
+    </div>
+    
+    <!-- نصب الشهيد العراقي -->
+    <div class="martyrs-monument">
+        <div class="monument-base"></div>
+        <div class="monument-dome-1"></div>
+        <div class="monument-dome-2"></div>
+        <div class="eternal-flame"></div>
+        <div class="flame-particle flame-1"></div>
+        <div class="flame-particle flame-2"></div>
+        <div class="flame-particle flame-3"></div>
+        <div class="monument-light"></div>
+        <div class="monument-detail detail-1"></div>
+        <div class="monument-detail detail-2"></div>
+        <div class="monument-detail detail-3"></div>
+        <div class="monument-detail detail-4"></div>
+    </div>
+    
+    <!-- مباني الشركات العالمية -->
+    <div class="apple-building">
+        <div class="apple-main">
+            <div class="apple-logo"></div>
+            <div class="apple-windows"></div>
+            <div class="apple-windows"></div>
+            <div class="apple-windows"></div>
+            <div class="apple-windows"></div>
+            <div class="apple-windows"></div>
+            <div class="apple-windows"></div>
+        </div>
+    </div>
+    
+    <div class="bmw-building">
+        <div class="bmw-main">
+            <div class="bmw-logo"></div>
+            <div class="bmw-windows"></div>
+            <div class="bmw-windows"></div>
+            <div class="bmw-windows"></div>
+            <div class="bmw-windows"></div>
+            <div class="bmw-windows"></div>
+            <div class="bmw-windows"></div>
+        </div>
+    </div>
+    
+    <div class="mercedes-building">
+        <div class="mercedes-main">
+            <div class="mercedes-logo">
+                <div class="mercedes-star"></div>
+            </div>
+            <div class="mercedes-windows"></div>
+            <div class="mercedes-windows"></div>
+            <div class="mercedes-windows"></div>
+            <div class="mercedes-windows"></div>
+            <div class="mercedes-windows"></div>
+            <div class="mercedes-windows"></div>
+            <div class="mercedes-windows"></div>
+            <div class="mercedes-windows"></div>
+        </div>
+    </div>
+    
+    <!-- متحف المستقبل -->
+    <div class="museum-future">
+        <div class="museum-base"></div>
+        <div class="museum-oval">
+            <div class="museum-hole"></div>
+        </div>
+    </div>
+    
+    <!-- برج العرب -->
+    <div class="burj-al-arab">
+        <div class="arab-base"></div>
+        <div class="arab-sail"></div>
+        <div class="arab-helipad"></div>
+    </div>
+    
+    <!-- برج بيزا المائل -->
+    <div class="leaning-tower">
+        <div class="pisa-body">
+            <div class="pisa-level"></div>
+            <div class="pisa-level"></div>
+            <div class="pisa-level"></div>
+            <div class="pisa-level"></div>
+            <div class="pisa-level"></div>
+            <div class="pisa-level"></div>
+            <div class="pisa-windows"></div>
+            <div class="pisa-windows"></div>
+            <div class="pisa-windows"></div>
+            <div class="pisa-windows"></div>
+        </div>
+    </div>
+    
+    <!-- برج صدام (برج بغداد) -->
+    <div class="baghdad-tower">
+        <!-- قاعدة البرج العريضة -->
+        <div class="tower-base"></div>
+        
+        <!-- الجزء السفلي من البرج -->
+        <div class="tower-lower">
+            <!-- نوافذ الجزء السفلي -->
+            <div class="tower-window" style="top: 20px; left: 8px;"></div>
+            <div class="tower-window" style="top: 20px; right: 8px;"></div>
+            <div class="tower-window" style="top: 50px; left: 8px;"></div>
+            <div class="tower-window" style="top: 50px; right: 8px;"></div>
+            <div class="tower-window" style="top: 80px; left: 8px;"></div>
+            <div class="tower-window" style="top: 80px; right: 8px;"></div>
+        </div>
+        
+        <!-- جسم البرج الأسطواني الرئيسي -->
+        <div class="tower-body">
+            <!-- مقسمات البرج -->
+            <div class="tower-section"></div>
+            <div class="tower-section"></div>
+            <div class="tower-section"></div>
+            <div class="tower-section"></div>
+            
+            <!-- نوافذ البرج الرئيسي -->
+            <div class="tower-windows">
+                <div class="tower-window"></div>
+                <div class="tower-window"></div>
+                <div class="tower-window"></div>
+                <div class="tower-window"></div>
+                <div class="tower-window"></div>
+                <div class="tower-window"></div>
+                <div class="tower-window"></div>
+                <div class="tower-window"></div>
+            </div>
+            
+            <!-- إضاءة جانبية -->
+            <div class="tower-side-light left"></div>
+            <div class="tower-side-light right"></div>
+        </div>
+        
+        <!-- منصة المراقبة -->
+        <div class="observation-deck"></div>
+        
+        <!-- القمة المخروطية -->
+        <div class="tower-top"></div>
+        
+        <!-- هوائي البرج -->
+        <div class="tower-antenna">
+            <div class="antenna-light"></div>
+        </div>
+    </div>
+    
+    <!-- رافعة الموانئ الطويلة -->
+    <div class="port-crane">
+        <!-- برج الرافعة -->
+        <div class="crane-tower"></div>
+        
+        <!-- ذراع الرافعة الرئيسي -->
+        <div class="crane-jib">
+            <!-- عربة الرافعة المتحركة -->
+            <div class="crane-trolley">
+                <!-- كابل الرافعة -->
+                <div class="crane-cable">
+                    <!-- الخطاف -->
+                    <div class="crane-hook">
+                        <!-- الحاوية المعلقة -->
+                        <div class="hanging-container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ذراع التوازن -->
+        <div class="crane-counter-jib"></div>
+        
+        <!-- كابينة المشغل -->
+        <div class="crane-cabin">
+            <div class="cabin-windows"></div>
+        </div>
+        
+        <!-- أضواء الرافعة -->
+        <div class="crane-lights">
+            <div class="crane-light"></div>
+            <div class="crane-light"></div>
+            <div class="crane-light"></div>
+        </div>
+    </div>
+    
+
+    
+    <!-- المشهد الكمركي المتكامل -->
+    <div class="customs-scene">
+        <div class="customs-ground">
+            <div class="road-markings"></div>
+        </div>
+        
+        <!-- الرافعة الكمركية -->
+        <div class="customs-crane">
+            <div class="crane-base"></div>
+            <div class="crane-arm">
+                <div class="crane-hook"></div>
+            </div>
+        </div>
+        
+        <!-- الحاوية -->
+        <div class="cargo-container"></div>
+        
+        <!-- موظفو الكمارك -->
+        <div class="customs-officer">
+            <div class="officer-head"></div>
+            <div class="officer-body"></div>
+            <div class="officer-legs"></div>
+        </div>
+        
+        <div class="customs-officer">
+            <div class="officer-head"></div>
+            <div class="officer-body"></div>
+            <div class="officer-legs"></div>
+        </div>
+        
+        <!-- الشاحنات -->
+        <div class="customs-truck">
+            <div class="truck-body">
+                <div class="truck-cabin"></div>
+                <div class="truck-wheel truck-wheel-1"></div>
+                <div class="truck-wheel truck-wheel-2"></div>
+            </div>
+        </div>
+        
+        <div class="customs-truck">
+            <div class="truck-body">
+                <div class="truck-cabin"></div>
+                <div class="truck-wheel truck-wheel-1"></div>
+                <div class="truck-wheel truck-wheel-2"></div>
+            </div>
+        </div>
+        
+        <!-- رافعة Front Lift للمركبات -->
+        <div class="front-lift">
+            <div class="lift-base"></div>
+            <div class="lift-arm-vertical">
+                <div class="lift-arm-horizontal">
+                    <div class="lift-hook"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- السيارة المرفوعة -->
+        <div class="car-on-lift">
+            <div class="car-wheels car-wheel-left"></div>
+            <div class="car-wheels car-wheel-right"></div>
+        </div>
+        
+        <!-- التريلة -->
+        <div class="trailer-truck">
+            <div class="trailer-body"></div>
+            <div class="trailer-cabin"></div>
+            <div class="trailer-wheel trailer-wheel-1"></div>
+            <div class="trailer-wheel trailer-wheel-2"></div>
+            <div class="trailer-wheel trailer-wheel-3"></div>
+        </div>
+        
+        <!-- شاحنات إضافية للازدحام -->
+        <div class="extra-truck">
+            <div class="extra-truck-body">
+                <div class="extra-truck-cabin"></div>
+                <div class="truck-wheel truck-wheel-1"></div>
+                <div class="truck-wheel truck-wheel-2"></div>
+            </div>
+        </div>
+        
+        <div class="extra-truck">
+            <div class="extra-truck-body">
+                <div class="extra-truck-cabin"></div>
+                <div class="truck-wheel truck-wheel-1"></div>
+                <div class="truck-wheel truck-wheel-2"></div>
+            </div>
+        </div>
+        
+        <div class="extra-truck">
+            <div class="extra-truck-body">
+                <div class="extra-truck-cabin"></div>
+                <div class="truck-wheel truck-wheel-1"></div>
+                <div class="truck-wheel truck-wheel-2"></div>
+            </div>
+        </div>
+        
+        <div class="extra-truck">
+            <div class="extra-truck-body">
+                <div class="extra-truck-cabin"></div>
+                <div class="truck-wheel truck-wheel-1"></div>
+                <div class="truck-wheel truck-wheel-2"></div>
+            </div>
+        </div>
+        
+        <!-- موظفين إضافيين -->
+        <div class="customs-officer">
+            <div class="officer-head"></div>
+            <div class="officer-body"></div>
+            <div class="officer-legs"></div>
+        </div>
+        
+        <div class="customs-officer">
+            <div class="officer-head"></div>
+            <div class="officer-body"></div>
+            <div class="officer-legs"></div>
+        </div>
+        
+        <div class="customs-officer">
+            <div class="officer-head"></div>
+            <div class="officer-body"></div>
+            <div class="officer-legs"></div>
+        </div>
+        
+        <div class="customs-officer">
+            <div class="officer-head"></div>
+            <div class="officer-body"></div>
+            <div class="officer-legs"></div>
+        </div>
+        
+        <!-- البواخر -->
+        <div class="cargo-ship">
+            <div class="ship-hull">
+                <div class="ship-deck"></div>
+                <div class="ship-container"></div>
+                <div class="ship-container"></div>
+                <div class="ship-container"></div>
+                <div class="ship-mast"></div>
+            </div>
+        </div>
+        
+        <div class="cargo-ship">
+            <div class="ship-hull">
+                <div class="ship-deck"></div>
+                <div class="ship-container"></div>
+                <div class="ship-container"></div>
+                <div class="ship-container"></div>
+                <div class="ship-mast"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fullscreen-login">
+        <div class="company-logo">
+            <img src="/static/company-logo.png" alt="شعار شركة الأصدقاء للتخليص الكمركي">
+        </div>
+        <h1>شركة الأصدقاء للتخليص الكمركي</h1>
+        <p class="company-description">نظام إدارة متطور ومتكامل للمعاملات المالية والشراكات التجارية بكفاءة عالية وشفافية كاملة</p>
+        
+        <div class="login-form-content">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <form method="POST">
+                <div class="form-group">
+                    <label for="username" class="form-label">👤 اسم المستخدم</label>
+                    <input type="text" class="form-control" id="username" name="username" required 
+                           placeholder="أدخل اسم المستخدم">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" class="form-label">🔐 كلمة المرور</label>
+                    <input type="password" class="form-control" id="password" name="password" required 
+                           placeholder="أدخل كلمة المرور">
+                </div>
+                
+                <button type="submit" class="btn login-btn">
+                    دخول النظام
+                </button>
+            </form>
+            
+
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // تفاعلات ديناميكية للواجهة
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginContainer = document.querySelector('.login-container');
+            const companyLogo = document.querySelector('.company-logo');
+            const inputs = document.querySelectorAll('.form-control');
+            const loginBtn = document.querySelector('.login-btn');
+            
+            // دعم التمرير بسكرول الماوس
+            let scrollTimeout;
+            const body = document.body;
+            const fullscreenLogin = document.querySelector('.fullscreen-login');
+            
+            // تحسين التمرير السلس
+            function smoothScroll(element, direction) {
+                const scrollAmount = 50;
+                const currentScroll = element.scrollTop;
+                const targetScroll = direction === 'up' ? 
+                    Math.max(0, currentScroll - scrollAmount) : 
+                    currentScroll + scrollAmount;
+                
+                element.scrollTo({
+                    top: targetScroll,
+                    behavior: 'smooth'
+                });
+            }
+            
+            // معالج أحداث سكرول الماوس
+            function handleWheelScroll(e) {
+                e.preventDefault();
+                
+                clearTimeout(scrollTimeout);
+                
+                const direction = e.deltaY > 0 ? 'down' : 'up';
+                smoothScroll(body, direction);
+                
+                // إضافة تأثير بصري أثناء التمرير
+                body.style.transform = `translateY(${direction === 'down' ? '-2px' : '2px'})`;
+                
+                scrollTimeout = setTimeout(() => {
+                    body.style.transform = 'translateY(0)';
+                }, 100);
+            }
+            
+            // تفعيل التمرير بسكرول الماوس
+            document.addEventListener('wheel', handleWheelScroll, { passive: false });
+            
+            // دعم التمرير باللمس للأجهزة المحمولة
+            let touchStartY = 0;
+            let touchEndY = 0;
+            
+            document.addEventListener('touchstart', function(e) {
+                touchStartY = e.changedTouches[0].screenY;
+            }, { passive: true });
+            
+            document.addEventListener('touchend', function(e) {
+                touchEndY = e.changedTouches[0].screenY;
+                const deltaY = touchStartY - touchEndY;
+                
+                if (Math.abs(deltaY) > 30) {
+                    const direction = deltaY > 0 ? 'down' : 'up';
+                    smoothScroll(body, direction);
+                }
+            }, { passive: true });
+            
+            // تحسين التنقل بلوحة المفاتيح
+            document.addEventListener('keydown', function(e) {
+                switch(e.key) {
+                    case 'ArrowUp':
+                    case 'PageUp':
+                        e.preventDefault();
+                        smoothScroll(body, 'up');
+                        break;
+                    case 'ArrowDown':
+                    case 'PageDown':
+                        e.preventDefault();
+                        smoothScroll(body, 'down');
+                        break;
+                    case 'Home':
+                        e.preventDefault();
+                        body.scrollTo({ top: 0, behavior: 'smooth' });
+                        break;
+                    case 'End':
+                        e.preventDefault();
+                        body.scrollTo({ top: body.scrollHeight, behavior: 'smooth' });
+                        break;
+                }
+            });
+            
+            // تأثير الحركة عند تحميل الصفحة (إصلاح المتغير المكرر)
+            if (fullscreenLogin) {
+                setTimeout(() => {
+                    fullscreenLogin.style.transform = 'translateY(0) scale(1)';
+                    fullscreenLogin.style.opacity = '1';
+                }, 300);
+            }
+            
+            // تفاعل الشعار مع الماوس
+            if (companyLogo) {
+                companyLogo.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.1) rotate(5deg)';
+                    this.style.boxShadow = '0 0 50px rgba(255, 215, 0, 0.8)';
+                });
+                
+                companyLogo.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1) rotate(0deg)';
+                    this.style.boxShadow = '0 0 25px rgba(255, 215, 0, 0.3)';
+                });
+            }
+            
+            // تأثيرات الحقول النصية
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.style.transform = 'scale(1.02)';
+                    this.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.4)';
+                    this.parentElement.style.transform = 'translateY(-2px)';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.style.transform = 'scale(1)';
+                    this.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.1)';
+                    this.parentElement.style.transform = 'translateY(0)';
+                });
+                
+                // تأثير الكتابة
+                input.addEventListener('input', function() {
+                    if (this.value.length > 0) {
+                        this.style.borderColor = '#28a745';
+                        this.style.background = 'rgba(40, 167, 69, 0.1)';
+                    } else {
+                        this.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                        this.style.background = 'rgba(255, 255, 255, 0.9)';
+                    }
+                });
+            });
+            
+            // تأثير زر الدخول
+            if (loginBtn) {
+                loginBtn.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.08) translateY(-2px)';
+                    this.style.boxShadow = '0 15px 40px rgba(102, 126, 234, 0.6)';
+                });
+                
+                loginBtn.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                    this.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.3)';
+                });
+                
+                loginBtn.addEventListener('click', function(e) {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1.05)';
+                    }, 150);
+                });
+            }
+            
+            // إنشاء جسيمات إضافية عشوائية
+            function createRandomParticle() {
+                const particle = document.createElement('div');
+                particle.className = 'floating-particle';
+                particle.style.width = Math.random() * 8 + 4 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = Math.random() * 4 + 6 + 's';
+                document.body.appendChild(particle);
+                
+                // إزالة الجسيم بعد انتهاء الحركة
+                setTimeout(() => {
+                    if (particle.parentNode) {
+                        particle.parentNode.removeChild(particle);
+                    }
+                }, 10000);
+            }
+            
+            // إنشاء جسيمات جديدة بشكل دوري
+            setInterval(createRandomParticle, 3000);
+            
+            // تأثير موجي عند النقر في أي مكان
+            document.addEventListener('click', function(e) {
+                const ripple = document.createElement('div');
+                ripple.style.position = 'fixed';
+                ripple.style.left = e.clientX - 15 + 'px';
+                ripple.style.top = e.clientY - 15 + 'px';
+                ripple.style.width = '30px';
+                ripple.style.height = '30px';
+                ripple.style.borderRadius = '50%';
+                ripple.style.background = 'rgba(255, 215, 0, 0.5)';
+                ripple.style.pointerEvents = 'none';
+                ripple.style.animation = 'rippleEffect 0.6s ease-out forwards';
+                ripple.style.zIndex = '9999';
+                
+                document.body.appendChild(ripple);
+                
+                setTimeout(() => {
+                    if (ripple.parentNode) {
+                        ripple.parentNode.removeChild(ripple);
+                    }
+                }, 600);
+            });
+            
+            // تحريك الخلفية بناءً على حركة الماوس
+            document.addEventListener('mousemove', function(e) {
+                const mouseX = e.clientX / window.innerWidth;
+                const mouseY = e.clientY / window.innerHeight;
+                
+                document.body.style.background = `
+                    linear-gradient(${135 + mouseX * 10}deg, 
+                    hsl(${230 + mouseX * 20}, 70%, ${60 + mouseY * 10}%) 0%, 
+                    hsl(${280 + mouseY * 15}, 60%, ${55 + mouseX * 8}%) 50%, 
+                    hsl(${210}, 100%, ${15 + mouseY * 5}%) 100%)
+                `;
+            });
+        });
+        
+        // تأثير الموجة
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes rippleEffect {
+                0% {
+                    transform: scale(1);
+                    opacity: 1;
+                }
+                100% {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

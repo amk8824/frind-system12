@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>السحوبات الخارجية - شركة الأصدقاء للتخليص الكمركي</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/print.css') }}" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg main-header">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="/">
+                <i class="fas fa-handshake me-2"></i>
+                شركة الأصدقاء للتخليص الكمركي
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link text-white" href="/">
+                    <i class="fas fa-home me-1"></i> الرئيسية
+                </a>
+                <button class="btn btn-outline-light btn-sm me-2" onclick="printWithdrawals()">
+                    <i class="fas fa-print"></i> طباعة
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-12">
+                <!-- Page Header -->
+                <div class="section-card mb-4">
+                    <div class="card-header bg-warning text-dark">
+                        <h4 class="mb-0">
+                            <i class="fas fa-money-bill-wave me-2"></i>
+                            إدارة السحوبات الخارجية
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- Add New Withdrawal Form -->
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <label class="form-label">المبلغ ($) *</label>
+                                <input type="number" class="form-control" id="withdrawAmount" step="0.01" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">التاريخ *</label>
+                                <input type="date" class="form-control" id="withdrawDate" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">نوع المصروف</label>
+                                <select class="form-control" id="withdrawType">
+                                    <option value="عام">مصروف عام</option>
+                                    <option value="إداري">مصروف إداري</option>
+                                    <option value="تشغيلي">مصروف تشغيلي</option>
+                                    <option value="طوارئ">مصروف طوارئ</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">الوصف</label>
+                                <input type="text" class="form-control" id="withdrawDescription" placeholder="وصف السحب">
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-9">
+                                <label class="form-label">ملاحظات</label>
+                                <textarea class="form-control" id="withdrawNotes" rows="2" placeholder="ملاحظات إضافية"></textarea>
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <button type="button" class="btn btn-warning w-100" onclick="addWithdrawal()">
+                                    <i class="fas fa-plus me-2"></i>
+                                    إضافة سحب
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Balance Info -->
+                        <div class="alert alert-info">
+                            <h5 class="alert-heading">
+                                <i class="fas fa-wallet me-2"></i>
+                                الرصيد المتاح للسحب: 
+                                <span class="text-success">${{ "%.2f"|format(stats.available_balance) }}</span>
+                            </h5>
+                            <hr>
+                            <p class="mb-0">هذا هو المبلغ المتاح للسحب بعد خصم جميع الالتزامات والديون.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters and Statistics -->
+                <div class="section-card mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-filter me-2"></i>
+                            المرشحات والإحصائيات
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">تصفية حسب الوصف</label>
+                                <input type="text" class="form-control" id="filterDescription" placeholder="ابحث في الوصف...">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">من تاريخ</label>
+                                <input type="date" class="form-control" id="filterDateFrom">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">إلى تاريخ</label>
+                                <input type="date" class="form-control" id="filterDateTo">
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-primary" onclick="applyFilters()">
+                                    <i class="fas fa-search me-2"></i>تطبيق المرشحات
+                                </button>
+                                <button type="button" class="btn btn-secondary ms-2" onclick="clearFilters()">
+                                    <i class="fas fa-times me-2"></i>مسح المرشحات
+                                </button>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <button type="button" class="btn btn-success" onclick="printFilteredWithdrawals()">
+                                    <i class="fas fa-print me-2"></i>طباعة السحوبات المصفاة
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Statistics Row -->
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="bg-light p-3 rounded text-center">
+                                    <h6>إجمالي السحوبات</h6>
+                                    <span class="h5 text-danger" id="totalWithdrawalsAmount">$0.00</span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="bg-light p-3 rounded text-center">
+                                    <h6>عدد السحوبات</h6>
+                                    <span class="h5 text-info" id="totalWithdrawalsCount">0</span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="bg-light p-3 rounded text-center">
+                                    <h6>أكبر سحب</h6>
+                                    <span class="h5 text-warning" id="maxWithdrawal">$0.00</span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="bg-light p-3 rounded text-center">
+                                    <h6>متوسط السحب</h6>
+                                    <span class="h5 text-primary" id="avgWithdrawal">$0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Withdrawals Table -->
+                <div class="section-card">
+                    <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-list me-2"></i>
+                            السحوبات السابقة
+                        </h5>
+                        <span class="badge bg-light text-dark" id="displayedCount">0 عنصر</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>التاريخ</th>
+                                        <th>المبلغ</th>
+                                        <th>نوع المصروف</th>
+                                        <th>الوصف</th>
+                                        <th>الملاحظات</th>
+                                        <th class="no-print">الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="withdrawalsTableBody">
+                                    <!-- سيتم تحميل البيانات هنا -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Print Header (Hidden on screen) -->
+    <div class="print-header" style="display: none;">
+        <h3>شركة الأصدقاء للتخليص الكمركي</h3>
+        <h4>تقرير السحوبات الخارجية</h4>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/sounds.js') }}"></script>
+    <script>
+        let allWithdrawals = [];
+        let filteredWithdrawals = [];
+
+        // تحميل البيانات عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            loadWithdrawals();
+            loadPartnersForFilters();
+            // تعيين التاريخ الحالي
+            document.getElementById('withdrawDate').value = new Date().toISOString().split('T')[0];
+        });
+
+        // تحميل السحوبات
+        async function loadWithdrawals() {
+            try {
+                const response = await fetch('/get_withdrawals');
+                allWithdrawals = await response.json();
+                filteredWithdrawals = [...allWithdrawals];
+                
+                displayWithdrawals(filteredWithdrawals);
+                updateStatistics(filteredWithdrawals);
+                
+            } catch (error) {
+                console.error('Error loading withdrawals:', error);
+                showAlert('حدث خطأ في تحميل السحوبات', 'danger');
+            }
+        }
+
+        // عرض السحوبات في الجدول
+        function displayWithdrawals(withdrawals) {
+            const tbody = document.getElementById('withdrawalsTableBody');
+            tbody.innerHTML = '';
+            
+            withdrawals.forEach(withdrawal => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${withdrawal.date}</td>
+                    <td class="text-danger">$${withdrawal.amount.toFixed(2)}</td>
+                    <td><span class="badge bg-secondary">${withdrawal.expense_type || 'عام'}</span></td>
+                    <td>${withdrawal.description || '-'}</td>
+                    <td>${withdrawal.notes || '-'}</td>
+                    <td class="no-print">
+                        <button class="btn btn-sm btn-danger" onclick="deleteWithdrawal(${withdrawal.id})">
+                            <i class="fas fa-trash"></i> حذف
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            document.getElementById('displayedCount').textContent = `${withdrawals.length} عنصر`;
+        }
+
+        // تحديث الإحصائيات
+        function updateStatistics(withdrawals) {
+            const totalAmount = withdrawals.reduce((sum, w) => sum + w.amount, 0);
+            const count = withdrawals.length;
+            const maxAmount = count > 0 ? Math.max(...withdrawals.map(w => w.amount)) : 0;
+            const avgAmount = count > 0 ? totalAmount / count : 0;
+            
+            document.getElementById('totalWithdrawalsAmount').textContent = `$${totalAmount.toFixed(2)}`;
+            document.getElementById('totalWithdrawalsCount').textContent = count;
+            document.getElementById('maxWithdrawal').textContent = `$${maxAmount.toFixed(2)}`;
+            document.getElementById('avgWithdrawal').textContent = `$${avgAmount.toFixed(2)}`;
+        }
+
+        // تهيئة المرشحات
+        function initializeFilters() {
+            // تعيين التاريخ الافتراضي لبداية الشهر
+            const today = new Date();
+            const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+            document.getElementById('filterDateFrom').value = firstDay.toISOString().split('T')[0];
+        }
+
+        // تطبيق المرشحات
+        function applyFilters() {
+            const descriptionFilter = document.getElementById('filterDescription').value.toLowerCase();
+            const dateFromFilter = document.getElementById('filterDateFrom').value;
+            const dateToFilter = document.getElementById('filterDateTo').value;
+            
+            filteredWithdrawals = allWithdrawals.filter(withdrawal => {
+                // فلترة حسب الوصف
+                if (descriptionFilter && !withdrawal.description.toLowerCase().includes(descriptionFilter)) {
+                    return false;
+                }
+                
+                // فلترة حسب التاريخ
+                if (dateFromFilter && withdrawal.date < dateFromFilter) {
+                    return false;
+                }
+                
+                if (dateToFilter && withdrawal.date > dateToFilter) {
+                    return false;
+                }
+                
+                return true;
+            });
+            
+            displayWithdrawals(filteredWithdrawals);
+            updateStatistics(filteredWithdrawals);
+            
+            showAlert(`تم تطبيق المرشحات. عرض ${filteredWithdrawals.length} من أصل ${allWithdrawals.length} عنصر`, 'info');
+        }
+
+        // مسح المرشحات
+        function clearFilters() {
+            document.getElementById('filterDescription').value = '';
+            document.getElementById('filterDateFrom').value = '';
+            document.getElementById('filterDateTo').value = '';
+            
+            filteredWithdrawals = [...allWithdrawals];
+            displayWithdrawals(filteredWithdrawals);
+            updateStatistics(filteredWithdrawals);
+            
+            showAlert('تم مسح جميع المرشحات', 'info');
+        }
+
+        // طباعة السحوبات المصفاة
+        function printFilteredWithdrawals() {
+            if (filteredWithdrawals.length === 0) {
+                showAlert('لا توجد سحوبات للطباعة', 'warning');
+                return;
+            }
+            
+            // إخفاء أعمدة الإجراءات
+            document.body.setAttribute('data-print-date', new Date().toLocaleDateString('ar-SA'));
+            document.body.className = 'print-withdrawals';
+            
+            setTimeout(() => {
+                window.print();
+                document.body.className = '';
+            }, 100);
+            
+            playUISound('print');
+        }
+
+        // إضافة سحب جديد
+        async function addWithdrawal() {
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const date = document.getElementById('withdrawDate').value;
+            const expenseType = document.getElementById('withdrawType').value;
+            const description = document.getElementById('withdrawDescription').value.trim();
+            const notes = document.getElementById('withdrawNotes').value.trim();
+
+            if (!amount || amount <= 0 || !date) {
+                showAlert('يرجى إدخال المبلغ والتاريخ', 'warning');
+                return;
+            }
+
+            try {
+                const response = await fetch('/save_withdrawal', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        amount: amount,
+                        date: date,
+                        expense_type: expenseType,
+                        description: description,
+                        notes: notes
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showAlert('تم إضافة السحب بنجاح', 'success');
+                    clearWithdrawalForm();
+                    loadWithdrawals();
+                    updateAvailableBalance();
+                    playUISound('success');
+                } else {
+                    showAlert('خطأ في إضافة السحب: ' + result.message, 'danger');
+                    playUISound('error');
+                }
+            } catch (error) {
+                console.error('Error adding withdrawal:', error);
+                showAlert('حدث خطأ في إضافة السحب', 'danger');
+                playUISound('error');
+            }
+        }
+
+        // حذف سحب
+        async function deleteWithdrawal(withdrawalId) {
+            if (!confirm('هل أنت متأكد من حذف هذا السحب؟')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/delete_withdrawal/${withdrawalId}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showAlert('تم حذف السحب بنجاح', 'success');
+                    loadWithdrawals();
+                    updateAvailableBalance();
+                    playUISound('success');
+                } else {
+                    showAlert('خطأ في حذف السحب: ' + result.error, 'danger');
+                    playUISound('error');
+                }
+            } catch (error) {
+                console.error('Error deleting withdrawal:', error);
+                showAlert('حدث خطأ في حذف السحب', 'danger');
+                playUISound('error');
+            }
+        }
+
+        // مسح نموذج السحب
+        function clearWithdrawalForm() {
+            document.getElementById('withdrawAmount').value = '';
+            document.getElementById('withdrawDescription').value = '';
+            document.getElementById('withdrawNotes').value = '';
+        }
+
+        // تحديث الرصيد المتاح
+        async function updateAvailableBalance() {
+            try {
+                const response = await fetch('/get_stats');
+                const stats = await response.json();
+                
+                const balanceElement = document.querySelector('.alert-info .text-success');
+                if (balanceElement) {
+                    balanceElement.textContent = `$${stats.available_balance.toFixed(2)}`;
+                }
+            } catch (error) {
+                console.error('Error updating balance:', error);
+            }
+        }
+
+        // طباعة السحوبات
+        function printWithdrawals() {
+            document.body.setAttribute('data-print-date', new Date().toLocaleDateString('ar-SA'));
+            document.body.className = 'print-withdrawals';
+            setTimeout(() => {
+                window.print();
+                document.body.className = '';
+            }, 100);
+            playUISound('print');
+        }
+
+        // عرض التنبيهات
+        function showAlert(message, type = 'info') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.parentNode.removeChild(alertDiv);
+                }
+            }, 5000);
+        }
+
+        // تشغيل الأصوات
+        function playUISound(type) {
+            try {
+                const audio = new Audio();
+                switch(type) {
+                    case 'success':
+                        audio.src = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmzKdxJNp+bxx2o';
+                        break;
+                    case 'error':
+                        audio.src = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmzKdxJNp+bxx2o';
+                        break;
+                    case 'print':
+                        audio.src = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmzKdxJNp+bxx2o';
+                        break;
+                }
+                audio.volume = 0.3;
+                audio.play().catch(() => {});
+            } catch (e) {}
+        }
+
+        // تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('withdrawDate').value = new Date().toISOString().split('T')[0];
+            loadWithdrawals();
+            initializeFilters();
+        });
+    </script>
+</body>
+</html>
